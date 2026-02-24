@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login — Lash Menu</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="admin">
+    <main id="auth-page" class="auth-page">
+        <div class="card">
+            <h2>Lash Menu — Admin</h2>
+
+            <div id="auth-forms">
+                <form id="signin-form" class="form active" novalidate>
+                    <h3>Sign In</h3>
+                    <label class="sr-only" for="signin-email">Email</label>
+                    <input id="signin-email" name="email" type="email" placeholder="Email" autocomplete="email"
+                        required>
+                    <div class="input-with-action">
+                        <label class="sr-only" for="signin-password">Password</label>
+                        <input id="signin-password" name="password" type="password" placeholder="Password"
+                            autocomplete="current-password" required>
+                        <button type="button" class="pw-toggle" aria-pressed="false"
+                            aria-label="Show password">Show</button>
+                    </div>
+                    <button id="signin-btn" type="submit" class="primary-btn">Sign In</button>
+                    <p class="muted">First time? <a id="show-signup" href="#">Create account</a></p>
+                    <div id="signin-msg" class="form-msg" aria-live="polite" role="status"></div>
+                </form>
+
+                <form id="signup-form" class="form" novalidate>
+                    <h3>Create Owner Account</h3>
+                    <label class="sr-only" for="signup-email">Email</label>
+                    <input id="signup-email" name="email" type="email" placeholder="Email" autocomplete="email"
+                        required>
+                    <div class="input-with-action">
+                        <label class="sr-only" for="signup-password">Password</label>
+                        <input id="signup-password" name="password" type="password" placeholder="Password (min 8 chars)"
+                            autocomplete="new-password" required>
+                        <button type="button" class="pw-toggle" aria-pressed="false"
+                            aria-label="Show password">Show</button>
+                    </div>
+                    <div class="input-with-action">
+                        <label class="sr-only" for="signup-password-confirm">Confirm password</label>
+                        <input id="signup-password-confirm" name="password_confirm" type="password"
+                            placeholder="Confirm Password" autocomplete="new-password" required>
+                        <button type="button" class="pw-toggle" aria-pressed="false"
+                            aria-label="Show password">Show</button>
+                    </div>
+                    <button id="signup-btn" type="submit" class="primary-btn">Sign Up</button>
+                    <p class="muted">Already have an account? <a id="show-signin" href="#">Sign in</a></p>
+                    <div id="signup-msg" class="form-msg" aria-live="polite" role="status"></div>
+                </form>
+            </div>
+
+            <footer class="card-foot">
+                <!-- footer intentionally left blank to reduce UI clutter -->
+            </footer>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-config.js"></script>
+    <style>
+        /* Keep auth page hidden until JS reveals it to avoid flicker */
+        .auth-page { opacity: 0; transition: opacity 0.3s ease; }
+        .auth-page.ready { opacity: 1; }
+    </style>
+    <script src="js/auth.js"></script>
+    <script src="js/auth-ui.js"></script>
+</body>
+
+</html>

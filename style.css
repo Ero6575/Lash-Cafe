@@ -1,0 +1,831 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+/* Dark theme inspired by black and gold */
+:root {
+    --primary-bg: #000;
+    --secondary-bg: #111;
+    --accent: #FFD700; /* Gold */
+    --text: #FFF;
+    --text-secondary: #CCC;
+    --card-bg: #222;
+    --shadow: rgba(255, 215, 0, 0.2);
+    --back: rgb(63, 237, 89);
+    --gap: 1rem;
+    --container-max: 1200px;
+    --radius: 10px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* Make header sticky on non-admin pages only to avoid overlapping admin UI */
+body:not(.admin) header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1100;
+}
+
+/* Header */
+body:not(.admin) header {
+    background-color: var(--secondary-bg);
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap);
+    box-shadow: 0 2px 10px var(--shadow);
+    /* header is fixed above on non-admin pages; keep visual styling here */
+}
+
+.logo h1 {
+    color: var(--accent);
+    font-size: 2rem;
+}
+
+.welcome p {
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.controls {
+    display: flex;
+    gap: var(--gap);
+    width: 100%;
+    max-width: 420px;
+}
+
+#language-select, #search-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--accent);
+    background-color: var(--card-bg);
+    color: var(--text);
+    border-radius: 5px;
+}
+
+/* Category Navigation */
+.category-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: var(--secondary-bg);
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+    /* keep categories visible below the fixed header */
+    /* keep nav fixed below the header so it never overlaps content */
+    position: fixed;
+    top: var(--header-height, 64px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1050;
+}
+
+.category-nav::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+}
+
+.category-btn {
+    background-color: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.22s, transform 0.18s;
+}
+
+.category-btn.active, .category-btn:hover {
+    background-color: var(--accent);
+    color: var(--primary-bg);
+}
+
+/* Menu Container */
+#menu-container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 28vw, 340px), 1fr));
+    gap: clamp(0.5rem, 1.5vw, 1.25rem);
+    padding: calc(var(--gap) * 0.9);
+    /* Push the entire menu below header+nav using the JS-updated CSS var */
+    margin-top: var(--combined-header-height, 220px);
+}
+
+/* Prevent content from being hidden behind the sticky header/nav.
+   JS sets --combined-header-height to header+nav height on load/resize. */
+main {
+    /* main no longer applies top padding; #menu-container uses margin-top instead */
+    padding-top: 0;
+}
+
+/* Menu Item Card */
+.menu-item {
+    background-color: var(--card-bg);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--shadow);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.45);
+}
+
+
+
+.menu-item img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    background-color: var(--secondary-bg);
+}
+
+.menu-item-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1 1 auto;
+}
+
+.menu-item h3 {
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.menu-item p {
+    color: var(--text-secondary);
+}
+
+/* Ingredients toggle inside menu item */
+.ingredients {
+    margin-top: 0.75rem;
+}
+.ingredients summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    background: rgba(255,215,0,0.06);
+    color: var(--accent);
+    border: 1px solid rgba(255,215,0,0.12);
+}
+.ingredients summary::-webkit-details-marker { display: none; }
+.ingredients .ingredients-content {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Ingredient list styling */
+.ingredients .ingredients-content ul {
+    margin: 0.4rem 0 0 1rem;
+    padding: 0;
+    list-style: disc;
+}
+.ingredients .ingredients-content li {
+    margin-bottom: 0.25rem;
+}
+
+/* Inline small ingredients text under price for all items */
+.no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    font-size: 1.05rem;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    header {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+    }
+
+    .logo h1 {
+        font-size: 2.5rem;
+    }
+
+    .welcome p {
+        font-size: 1.2rem;
+    }
+
+    .controls {
+        max-width: 360px;
+    }
+
+    #menu-container {
+        grid-template-columns: repeat(auto-fit, minmax(clamp(260px, 22vw, 380px), 1fr));
+    }
+}
+
+@media (max-width: 420px) {
+    header { padding: 0.75rem; }
+    .logo h1 { font-size: 1.4rem; }
+    .welcome p { font-size: 0.95rem; }
+    .controls { gap: 0.5rem; }
+    .menu-item img { aspect-ratio: 4 / 3; }
+}
+
+/* Improved focus styles for keyboard users */
+.category-btn:focus-visible, #language-select:focus-visible, #search-input:focus-visible {
+    outline: 3px solid rgba(255,215,0,0.22);
+    outline-offset: 3px;
+}
+
+/* Prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .menu-item, .category-btn { transition: none; }
+}
+
+/* Ensure content is pushed below fixed header/nav and anchors offset correctly */
+html {
+    scroll-padding-top: var(--combined-header-height, 220px);
+}
+
+body {
+    /* keep body padding neutral; main handles offset to avoid double-counting */
+    padding-top: 0;
+}
+
+/* Ensure focused/anchor-scrolled items are offset below the fixed header/nav */
+.menu-item, #menu-container {
+    scroll-margin-top: var(--combined-header-height, 220px);
+}
+
+
+
+/* Admin — auth.css (scoped by body.admin) */
+body.admin {
+  --admin-bg:#f6f8fb;
+  --admin-card:#ffffff;
+  --admin-accent:#0b5fff;
+  --admin-muted:#6b7280;
+  --admin-text:#0b1220;
+  --admin-glass: rgba(11,18,32,0.02);
+}
+body.admin * {
+    box-sizing: border-box;
+}
+
+body.admin html,
+body.admin {
+    height: 100%;
+}
+
+body.admin {
+    margin: 0;
+    font-family: Inter, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background: var(--admin-bg);
+    color: var(--admin-text);
+    min-height: 100vh;
+}
+
+/* Center only the auth (login/signup) page; keep dashboard layout full-width */
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+}
+
+body.admin .auth-page .card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--admin-card);
+    padding: 36px;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(16, 24, 40, 0.08);
+    border: 1px solid rgba(16, 24, 40, 0.04);
+}
+
+body.admin .title {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1.05;
+    font-weight: 700;
+}
+
+body.admin .subtitle {
+    margin: 6px 0 18px;
+    color: var(--admin-muted);
+    font-size: 14px;
+}
+
+body.admin .required-note {
+    margin: 0 0 12px;
+    color: var(--admin-muted);
+    font-size: 13px;
+}
+
+body.admin .form {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+}
+
+body.admin .form.active {
+     display: flex; 
+    }
+
+body.admin .field-label {
+    display: block;
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: #111827;
+}
+
+body.admin .req {
+     color: var(--admin-accent); 
+     margin-left: 4px;
+     }
+
+body.admin .input-with-action {
+     position: relative;
+     }
+
+body.admin .input-with-action input {
+    width: 100%;
+    padding: 12px 44px 12px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(16, 24, 40, 0.06);
+    background: transparent;
+    color: var(--admin-text);
+    transition: box-shadow .12s ease, border-color .12s ease;
+}
+
+/* Admin dashboard helper classes moved from inline styles */
+body.admin .field--small {
+    flex: 0 0 24%;
+}
+
+body.admin .field--flex {
+    flex: 1;
+}
+
+/* Image preview hidden by default; JS can set display:block when preview available */
+body.admin .image-preview {
+    display: none;
+    margin-top: 12px;
+}
+
+body.admin .image-preview img {
+    max-width: 100%;
+    border-radius: 8px;
+    display: block;
+}
+
+body.admin .input-with-action .pw-toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 0;
+    color: var(--admin-muted);
+    font-weight: 600;
+    padding: 6px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+body.admin input:focus {
+    outline: none;
+    box-shadow: 0 6px 20px rgba(11, 95, 255, 0.08);
+    border-color: var(--admin-accent);
+}
+
+body.admin input {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(16, 24, 40, 0.06);
+    background: transparent;
+    color: var(--admin-text);
+    transition: box-shadow .12s ease, border-color .12s ease;
+}
+
+body.admin .row {
+     display: flex;
+      justify-content: space-between; 
+      align-items: center; 
+    }
+
+body.admin .forgot { 
+    font-size: 13px;
+     color: var(--admin-muted); 
+     text-decoration: none;
+     }
+body.admin .forgot:hover { 
+    text-decoration: underline; 
+}
+
+body.admin .primary-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 0;
+    background: linear-gradient(180deg, var(--admin-accent), #0845d1);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 8px 24px rgba(11, 95, 255, 0.12);
+    transition: transform .12s ease, opacity .12s ease;
+}
+
+body.admin .primary-btn:hover {
+    transform: translateY(-2px);
+}
+
+body.admin .primary-btn[disabled] {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+body.admin .form-msg {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 8px;
+    min-height: 18px;
+}
+
+body.admin .muted {
+    color: var(--admin-muted);
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+body.admin .card-foot {
+    margin-top: 12px;
+    text-align: center;
+    color: var(--admin-muted);
+}
+
+body.admin .btn-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+    animation: spin .9s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 500px) {
+    body.admin .auth-page .card { padding: 22px; margin: 8px; }
+}
+
+/* Accessible visually-hidden helper for labels */
+body.admin .sr-only{
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0}
+
+/* Ensure auth pages (login/signup) keep dark text even though dashboard styles set a dark theme */
+body.admin .auth-page,
+body.admin .auth-page * {
+  color: var(--admin-text) !important;
+}
+body.admin .auth-page .card { background: var(--admin-card); }
+
+/* Admin — dashboard.css (scoped by body.admin) */
+/* Light, modern admin theme (blue/teal accents) */
+body.admin {
+    --admin-bg: #eefef6; /* light water green */
+    --admin-card: #ffffff;
+    --admin-accent: #6ee7b7; /* light green */
+    --admin-accent-2: #10b981; /* emerald */
+    --admin-muted: #475569;
+    --admin-text: #042a2b;
+    --admin-glow: rgba(16,185,129,0.10);
+    background: var(--admin-bg);
+    color: var(--admin-text);
+}
+.items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.card-item { background: var(--admin-card); border-radius: 10px; overflow: hidden; box-shadow: 0 8px 24px rgba(2,6,23,0.06); border: 1px solid rgba(15,23,42,0.04); display:flex; flex-direction:column; }
+.card-item img { width:100%; height:160px; object-fit:cover; }
+.card-item .card-body { padding:12px; display:flex; flex-direction:column; gap:8px; }
+.card-item h4 { margin:0; color: var(--admin-accent-2); font-size:1rem; }
+.card-item .meta { font-size:0.9rem; color: var(--admin-muted); display:flex; justify-content:space-between; align-items:center; }
+.card-actions { display:flex; gap:8px; margin-top:8px; }
+.btn { padding:8px 10px; border-radius:8px; border:0; cursor:pointer; font-weight:600; }
+.btn-edit { background: linear-gradient(90deg, var(--admin-accent-2), var(--admin-accent)); color:#fff; }
+.btn-delete { background: transparent; border:1px solid rgba(15,23,42,0.06); color:var(--admin-muted); }
+.modal .image-preview { margin-top:8px; }
+.modal .image-preview img { max-width:100%; height:auto; border-radius:8px; border:1px solid rgba(15,23,42,0.04); }
+.input, input, textarea, select { padding:10px 12px; border-radius:8px; border:1px solid rgba(15,23,42,0.06); width:100%; box-sizing:border-box; }
+.top-actions { display:flex; gap:8px; align-items:center; }
+.top-actions .input { width:240px; }
+.btn { padding:8px 12px; }
+
+body.admin .layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+body.admin .sidebar {
+    width: 220px;
+    padding: 20px;
+    background: linear-gradient(180deg, #f7ffff, #eef8f9);
+    border-right: 1px solid rgba(15,23,42,0.04);
+    display: flex;
+    flex-direction: column;
+}
+
+body.admin .logo {
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--admin-accent-2);
+    font-size: 1.15rem;
+}
+
+body.admin .sidebar nav button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 0;
+    background: transparent;
+    color: var(--admin-muted);
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+body.admin .sidebar nav button.active {
+    background: linear-gradient(90deg, rgba(11,132,255,0.08), rgba(14,165,164,0.06));
+    color: var(--admin-accent-2);
+    box-shadow: 0 6px 18px var(--admin-glow);
+}
+
+body.admin .sidebar-foot { margin-top: auto; }
+
+body.admin .sidebar-foot button {
+    background: var(--admin-card);
+    border: 1px solid rgba(15,23,42,0.06);
+    padding: 8px;
+    border-radius: 8px;
+    color: var(--admin-muted);
+}
+
+body.admin .main { flex: 1; padding: 18px; }
+
+body.admin .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+
+body.admin .card { background: var(--admin-card); padding: 16px; border-radius: 10px; border: 1px solid rgba(15,23,42,0.04); box-shadow: 0 6px 20px rgba(11,132,255,0.03); }
+
+body.admin .hidden { display: none; }
+
+body.admin .loading { padding: 18px; text-align: center; color: var(--admin-muted); }
+
+body.admin table { width:100%; border-collapse: collapse; }
+body.admin th, body.admin td { padding: 10px; border-bottom: 1px solid rgba(15,23,42,0.04); text-align:left; }
+
+body.admin img.thumb { width: 64px; height: 48px; object-fit: cover; border-radius: 8px; }
+
+body.admin .modal { display: none; position: fixed; inset: 0; background: rgba(8,12,20,0.45); z-index: 1000; }
+body.admin .modal.visible { display: flex; justify-content:center; align-items:center; }
+body.admin .modal-inner { background: var(--admin-card); padding: 18px; border-radius: 10px; min-width: 320px; box-shadow: 0 10px 30px rgba(2,6,23,0.08); }
+
+body.admin .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+
+body.admin .toast { position: fixed; right: 16px; bottom: 16px; background: var(--admin-card); color: var(--admin-text); padding: 8px 12px; border-radius: 8px; display:none; box-shadow: 0 6px 18px rgba(2,6,23,0.06); }
+
+body.admin .category-controls { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+body.admin #categories-list li { padding:10px; border:1px solid rgba(15,23,42,0.04); margin-bottom:8px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; background: #fbffff; }
+
+/* Items grid (card-based) */
+.items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.card-item { background: var(--admin-card); border-radius: 10px; overflow: hidden; box-shadow: 0 8px 24px rgba(2,6,23,0.06); border: 1px solid rgba(15,23,42,0.04); display:flex; flex-direction:column; }
+.card-item img { width:100%; height:160px; object-fit:cover; }
+.card-item .card-body { padding:12px; display:flex; flex-direction:column; gap:8px; }
+.card-item h4 { margin:0; color: var(--admin-accent-2); font-size:1rem; }
+.card-item .meta { font-size:0.9rem; color: var(--admin-muted); display:flex; justify-content:space-between; align-items:center; }
+.card-actions { display:flex; gap:8px; margin-top:8px; }
+.btn { padding:8px 10px; border-radius:8px; border:0; cursor:pointer; font-weight:600; }
+.btn-edit { background: linear-gradient(90deg, var(--admin-accent-2), var(--admin-accent)); color:#fff; }
+.btn-delete { background: transparent; border:1px solid rgba(15,23,42,0.06); color:var(--admin-muted); }
+
+@media (max-width: 900px) { body.admin .sidebar { display:none; } body.admin .main { padding:12px; } }
+
+/* Slide-over modal for nicer UX */
+.modal.slide-over { align-items: stretch; justify-content: flex-end; }
+.modal.slide-over .slide-inner { width: min(560px, 96vw); height: 100%; border-radius: 0; display:flex; flex-direction:column; padding:20px; }
+.modal .image-preview { margin-top:8px; }
+.modal .image-preview img { max-width:100%; height:auto; border-radius:8px; border:1px solid rgba(15,23,42,0.04); }
+
+/* Inputs and buttons styling */
+.input, input, textarea, select { padding:10px 12px; border-radius:8px; border:1px solid rgba(15,23,42,0.06); width:100%; box-sizing:border-box; }
+.top-actions { display:flex; gap:8px; align-items:center; }
+.top-actions .input { width:240px; }
+.btn { padding:8px 12px; }
+
+/* nicer modal actions */
+.modal-actions .btn { min-width:90px; }
+
+/* subtle hover */
+.card-item:hover { transform: translateY(-6px); transition: transform .18s ease; }
+
+/* Small screen adjustments */
+@media (max-width: 640px) {
+    .top-actions { flex-direction: row-reverse; gap:6px; }
+    .top-actions .input { width: 140px; }
+    .items-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+}
+
+/* Form rows and responsive stacking */
+.form-row { display:flex; gap:12px; margin-bottom:12px; align-items:flex-start; }
+.form-row .field { flex:1; min-width:0; }
+/* Inputs take full width of their field; field sizing controls layout rather than input width */
+.form-row .field input, .form-row .field textarea, .form-row .field select { width:100%; max-width:100%; box-sizing:border-box; }
+.form-row .field[style*="flex:0 0 24%"] { flex: 0 0 24%; min-width: 160px; }
+
+@media (max-width: 920px) {
+    /* stack form fields on small screens for simpler layout */
+    .form-row { flex-direction: column; }
+    .form-row .field[style*="flex:0 0 24%"] { flex: 1 1 auto; min-width:0; }
+}
+
+/* Prevent horizontal overflow from the admin area */
+body.admin { overflow-x: hidden; }
+
+/* Main layout container centered and constrained to avoid edge overflow */
+.layout { align-items: flex-start; }
+.main { max-width: 1100px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+
+/* Busy overlay for admin dashboard to block intermediate states during loads */
+.busy-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4,6,8,0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1400;
+}
+.busy-overlay[aria-hidden="false"] { display: flex; }
+.busy-overlay .busy-inner { display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px; background: rgba(255,255,255,0.02); border-radius:12px; }
+.busy-overlay .spinner { width:44px; height:44px; border-radius:50%; border:4px solid rgba(255,255,255,0.12); border-top-color: rgba(255,255,255,0.9); animation: spin 0.9s linear infinite; }
+.busy-overlay .busy-text { color: #fff; font-weight:700; font-size:16px; }
+
+/* Smooth update helper: elements updated via JS will use inline opacity transitions,
+   but provide a small fallback transition rule here for consistency. */
+.card-item, #items-body tr { transition: opacity .18s ease; }
+
+/* Topbar: allow wrapping to prevent overflow */
+.topbar { gap:12px; flex-wrap: wrap; }
+.top-actions { flex-wrap: wrap; }
+.top-actions .input { flex: 1 1 220px; min-width: 120px; }
+
+/* Items grid: ensure cards wrap and don't cause horizontal scroll */
+.items-grid { grid-auto-rows: auto; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+
+/* Modal slide inner: constrain width and allow scroll inside on small screens */
+.modal.slide-over .slide-inner { width: min(640px, 96vw); height: 100%; overflow-y: auto; }
+
+/* Reduce large paddings on very small screens */
+@media (max-width: 420px) {
+    .card-item img { height: 120px; }
+    .top-actions .input { flex-basis: 120px; }
+    .modal.slide-over .slide-inner { padding: 12px; }
+}
+
+/* Category cards grid */
+.category-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 8px 0;
+}
+
+.category-card {
+    background: var(--admin-card);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    box-shadow: 0 4px 16px rgba(2, 6, 23, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(2, 6, 23, 0.1);
+}
+
+.category-card h3 {
+    margin: 0 0 8px;
+    color: var(--admin-accent-2);
+    font-size: 1.1rem;
+    text-transform: capitalize;
+}
+
+.category-card .item-count {
+    color: var(--admin-muted);
+    font-size: 0.9rem;
+}
+
+.items-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.items-header h2 {
+    margin: 0;
+    text-transform: capitalize;
+    color: var(--admin-accent-2);
+}
+
+/* Ingredients preview on admin item cards */
+.card-item .ingredients-preview {
+    font-size: 0.8rem;
+    color: var(--admin-muted);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* Admin ingredients dropdown (clickable toggle) */
+.admin-ingredients {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.admin-ingredients summary {
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(16, 185, 129, 0.08);
+    color: var(--admin-accent-2);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    font-size: 0.85rem;
+    font-weight: 600;
+    list-style: none;
+    display: inline-block;
+}
+
+.admin-ingredients summary::-webkit-details-marker {
+    display: none;
+}
+
+.admin-ingredients summary::before {
+    content: '▸ ';
+}
+
+.admin-ingredients[open] summary::before {
+    content: '▾ ';
+}
+
+.admin-ingredients ul {
+    margin: 6px 0 0 16px;
+    padding: 0;
+    list-style: disc;
+}
+
+.admin-ingredients li {
+    color: var(--admin-muted);
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+}

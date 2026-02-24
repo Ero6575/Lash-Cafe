@@ -1,0 +1,13 @@
+{
+  "name": "cafe-project",
+  "private": true,
+  "scripts": {
+    "seed:menu": "node scripts/seed_from_menujson.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3"
+  },
+  "devDependencies": {
+    "minimist": "^1.2.8"
+  }
+}

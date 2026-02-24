@@ -1,0 +1,20 @@
+{
+    "name": "Lash Burger & Pizza Menu",
+    "short_name": "Lash Menu",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#000",
+    "theme_color": "#FFD700",
+    "icons": [
+        {
+            "src": "images/pizza/margarita-pizza.jpg",
+            "sizes": "192x192",
+            "type": "image/jpeg"
+        },
+        {
+            "src": "images/pizza/margarita-pizza.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg"
+        }
+    ]
+}

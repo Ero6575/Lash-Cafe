@@ -1,0 +1,1128 @@
+{
+    "breakfast": [
+        {
+            "name": {
+                "en": "Normal Full",
+                "am": "መደበኛ ፉል",
+                "om": "Fuulii Normaalii"
+            },
+            "price": 150,
+            "image": "images/breakfast/normal-full.jpg",
+            "ingredients": {
+                "en": "pea, onion, oil, red pepper, tomato, garlic, mace/cardamom, black pepper, salt",
+                "am": "አተር, ሽንኩርት, ዘይት, በርበሬ, ቲማቲም, ነጭ ሽንኩርት, ኮረሪማ, ቁንዶ በርበሬ, ጨው",
+                "om": "ataraa, shunkurti, zayiti, barbaree, timatimii, shunkurti adii, korerima, qundo barbare, ashabo"
+            }
+        },
+        {
+            "name": {
+                "en": "Avocado Full",
+                "am": "አቮካዶ ፉል",
+                "om": "Fuulii Avokaadoo"
+            },
+            "price": 160,
+            "image": "images/breakfast/avocado-full.jpg",
+            "ingredients": {
+                "en": "pea, onion, oil, red pepper, tomato, garlic, mace/cardamom, black pepper, salt, avocado",
+                "am": "አተር, ሽንኩርት, ዘይት, በርበሬ, ቲማቲም, ነጭ ሽንኩርት, ኮረሪማ, ቁንዶ በርበሬ, ጨው, አቮካዶ",
+                "om": "ataraa, shunkurti, zayiti, barbaree, timatimii, shunkurti adii, korerima, qundo barbaree, ashabo, avokaadoo"
+            }
+        },
+        {
+            "name": {
+                "en": "Special Full",
+                "am": "እስፔሻል ፉል",
+                "om": "Fuulii Ispeeshaalii"
+            },
+            "price": 200,
+            "image": "images/breakfast/special-full.jpg",
+            "ingredients": {
+                "en": "pea, onion, oil, red pepper, tomato, garlic, mace/cardamom, black pepper, salt, egg, heart burner",
+                "am": "አተር, ሽንኩርት, ዘይት, በርበሬ, ቲማቲም, ነጭ ሽንኩርት, ኮረሪማ, ቁንዶ በርበሬ, ጨው, እንቁላል, ቃራ",
+                "om": "ataraa, shunkurti, zayiti, barbaree, timatimii, shunkurti adii, korerima, qundo barbaree, ashabo, killee, Qaraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Fasting Chachebsa",
+                "am": "የጾም ጨጨብሳ",
+                "om": "Caccabsaa Soomaa"
+            },
+            "price": 150,
+            "image": "images/breakfast/fasting-chachebsa.jpg",
+            "ingredients": {
+                "en": "injera, berbere, spices",
+                "am": "እንጀራ, በርበሬ, ቅመም",
+                "om": "Injeraa, berberee, qamadii"
+            }
+        },
+        {
+            "name": {
+                "en": "Special Chachebsa",
+                "am": "እስፔሻል ጨጨብሳ",
+                "om": "Caccabsaa Ispeeshaalii"
+            },
+            "price": 160,
+            "image": "images/breakfast/special-chachebsa.jpg"
+        },
+        {
+            "name": {
+                "en": "Egg with Avocado",
+                "am": "እንቁላል ከአቮካዶ ጋር",
+                "om": "Killee Avokaadoo waliin"
+            },
+            "price": 150,
+            "image": "images/breakfast/egg-with-avocado.jpg"
+        },
+        {
+            "name": {
+                "en": "Egg Firfir",
+                "am": "እንቁላል ፍርፍር",
+                "om": "Firfirii killee"
+            },
+            "price": 150,
+            "image": "images/breakfast/egg-firfir.jpg",
+            "ingredients": {
+                "en": "egg, berbere, spices",
+                "am": "እንቁላል, በርበሬ, ቅመም",
+                "om": "killee, berberee, qamadii"
+            }
+        },
+        {
+            "name": {
+                "en": "Special Firfir",
+                "am": "እስፔሻል ፍርፍር",
+                "om": "Firfirii Ispeeshaalii"
+            },
+            "price": 270,
+            "image": "images/breakfast/special-firfir.jpg"
+        },
+        {
+            "name": {
+                "en": "Fasting Firfir",
+                "am": "የጾም ፍርፍር",
+                "om": "Firfirii Soomaa"
+            },
+            "price": 150,
+            "image": "images/breakfast/fasting-firfir.jpg",
+            "ingredients": {
+                "en": "injera, berbere, spices",
+                "am": "እንጀራ, በርበሬ, ቅመም",
+                "om": "Injeraa, berberee, qamadii"
+            }
+        },
+        {
+            "name": {
+                "en": "Special Omelet",
+                "am": "እስፔሻል ኦምሌት",
+                "om": "Oomeleetii Ispeeshaalii"
+            },
+            "price": 250,
+            "image": "images/breakfast/special-omelet.jpg",
+            "ingredients": {
+                "en": "egg, vegetables, cheese",
+                "am": "እንቁላል, አትክልት, ጃቸር",
+                "om": "killee, kuduraa, jibaa"
+            }
+        },
+        {
+            "name": {
+                "en": "Normal Omelet",
+                "am": "መደበኛ ኦምሌት",
+                "om": "Oomeleetii Normaalii"
+            },
+            "price": 150,
+            "image": "images/breakfast/normal-omelet.jpg",
+            "ingredients": {
+                "en": "egg, vegetables, cheese",
+                "am": "እንቁላል, አትክልት, ጃቸር",
+                "om": "killee, kuduraa, jibaa"
+            }
+        },
+        {
+            "name": {
+                "en": "Pan Cake",
+                "am": "ፓንኬክ",
+                "om": "Paankeekii"
+            },
+            "price": 200,
+            "image": "images/breakfast/pan-cake.jpg",
+            "ingredients": {
+                "en": "flour, egg, milk, sugar",
+                "am": "ዱቄት, እንቁላል, ወተት, ስኳር",
+                "om": "Dukii, killee, aannan, sukkaara"
+            }
+        },
+        {
+            "name": {
+                "en": "Humita Firfir",
+                "am": "ሁሚታ ፍርፍር",
+                "om": "Firfirii Humitaa"
+            },
+            "price": 250,
+            "image": "images/breakfast/humita-firfir.jpg",
+            "ingredients": {
+                "en": "corn, berbere, spices",
+                "am": "ዱቄት ድንች, በርበሬ, ቅመም",
+                "om": "Dukii dinchii, berberee, qamadii"
+            }
+        },
+        {
+            "name": {
+                "en": "Normal Firfir",
+                "am": "መደበኛ ፍርፍር",
+                "om": "Firfirii Normaalii"
+            },
+            "price": 180,
+            "image": "images/breakfast/normal-firfir.jpg",
+            "ingredients": {
+                "en": "injera, berbere, spices",
+                "am": "እንጀራ, በርበሬ, ቅመም",
+                "om": "Injeraa, berberee, qamadii"
+            }
+        },
+        {
+            "name": {
+                "en": "Beef Firfir",
+                "am": "ስጋ ፍርፍር",
+                "om": "Firfirii Foonii"
+            },
+            "price": 250,
+            "image": "images/breakfast/beef-firfir.jpg"
+        },
+        {
+            "name": {
+                "en": "French Toast",
+                "am": "ፈረንሳይ ቶስት",
+                "om": "Firaanchii Toostii"
+            },
+            "price": 150,
+            "image": "images/breakfast/french-toast.jpg",
+            "ingredients": {
+                "en": "bread, egg, milk, cinnamon, sugar",
+                "am": "እንጀራ, እንቁላል, ወተት, ሲኒሞን, ስኳር",
+                "om": "Buddeena, killee, aannan, sinimoonii, sukkaara"
+            }
+        },
+        {
+            "name": {
+                "en": "Egg silse",
+                "am": "እንቁላል ሲልሲ",
+                "om": "Silsi Timaatimaa"
+            },
+            "price": 250,
+            "image": "images/breakfast/egg-silse.jpg",
+            "ingredients": {
+                "en": "egg, tomato, onion, green pepper, spices",
+                "am": "እንቁላል, ቲማቲም, ሽንኩርት, አረንጓዴ በርበሬ, ቅመም",
+                "om": "killee, tamataa, qamadii, berberee, qamadii"
+            }
+        }
+    ],
+    "salad": [
+        {
+            "name": {
+                "en": "Mixed Salad",
+                "am": "የተቀላቀለ ሰላጣ",
+                "om": "Sallaxaa Walmakaa"
+            },
+            "price": 220,
+            "image": "images/salad/mixed-salad.jpg",
+            "ingredients": {
+                "en": "lettuce, tomato, cucumber, onion, dressing",
+                "am": "ሌትሩስ, ቲማቲም, ኩኩምበር, ሽንኩርት, የሰላጣ ሶስ",
+                "om": "Salaata, tamataa, kukumbarii, qamadii, sosii sallataa"
+            }
+        },
+        {
+            "name": {
+                "en": "Fruit Salad",
+                "am": "የፍራፍሬ ሰላጣ",
+                "om": "Sallaxaa Fuduraa"
+            },
+            "price": 220,
+            "image": "images/salad/fruit-salad.jpg",
+            "ingredients": {
+                "en": "salad, mixed fruits, dressing",
+                "am": "ሰላጣ, የተቀላቀለ ፍራፍሬ, የሰላጣ ሶስ",
+                "om": "Sallaxaa, fuduraa walmakaa, sosii sallataa"
+            }
+        },
+        {
+            "name": {
+                "en": "Tuna Salad",
+                "am": "የቱና ሰላጣ",
+                "om": "Sallaxaa Tuuna"
+            },
+            "price": 260,
+            "image": "images/salad/tuna-salad.jpg",
+            "ingredients": {
+                "en": "salad, tuna, dressing",
+                "am": "ሰላጣ, ቱና, የሰላጣ ሶስ",
+                "om": "Sallaxaa, tuuna, sosii sallataa"
+            }
+        },
+        {
+            "name": {
+                "en": "Chicken Salad",
+                "am": "የዶሮ ሰላጣ",
+                "om": "Sallaxaa Lukkuu"
+            },
+            "price": 260,
+            "image": "images/salad/chicken-salad.jpg",
+            "ingredients": {
+                "en": "salad, grilled chicken, dressing",
+                "am": "ሰላጣ, የተጠበሰ ዶሮ, የሰላጣ ሶስ",
+                "om": "Sallaxaa, lukkuu bilcheessame, sosii sallataa"
+            }
+        }
+    ],
+    "chicken": [
+        {
+            "name": {
+                "en": "Chicken Combo",
+                "am": "የዶሮ ኮምቦ",
+                "om": "Komboo Lukkuu"
+            },
+            "price": 380,
+            "image": "images/chicken/chicken-combo.jpg",
+            "ingredients": {
+                "en": "chicken, fries, salad, drink",
+                "am": "ዶሮ, ፍራይስ, ሰላጣ, መጠጥ",
+                "om": "Lukkuu, chiipsii, sallataa, dhugaatii"
+            }
+        },
+        {
+            "name": {
+                "en": "Chicken Wing",
+                "am": "የዶሮ ክንፍ",
+                "om": "Kochoo Lukkuu"
+            },
+            "price": 350,
+            "image": "images/chicken/chicken-wing.jpg",
+            "ingredients": {
+                "en": "chicken, wing, fries, salad, drink",
+                "am": "ዶሮ, ክንፍ, ፍራይስ, ሰላጣ, መጠጥ",
+                "om": "Lukkuu, kochoo, chiipsii, sallataa, dhugaatii"
+            }
+        },
+        {
+            "name": {
+                "en": "Chicken Leg",
+                "am": "የዶሮ እግር",
+                "om": "Miila Lukkuu"
+            },
+            "price": 400,
+            "image": "images/chicken/chicken-leg.jpg",
+            "ingredients": {
+                "en": "chicken, leg, fries, salad, drink",
+                "am": "ዶሮ, እግር, ፍራይስ, ሰላጣ, መጠጥ",
+                "om": "Lukkuu, miila, chiipsii, sallataa, dhugaatii"
+            }
+        }
+    ],
+    "burger": [
+        {
+            "name": {
+                "en": "Normal Burger",
+                "am": "መደበኛ በርገር",
+                "om": "Bargarii Normaalii"
+            },
+            "price": 250,
+            "image": "images/burger/normal-burger.jpg",
+            "ingredients": {
+                "en": "Beef patty, lettuce, tomato, ketchup",
+                "am": "የበሬ ፓቲ, ሌትሩስ, ቲማቲም, ኬችውፕ",
+                "om": "Foonii, salaata, tamataa, ketchup"
+            }
+        },
+        {
+            "name": {
+                "en": "Cheese Burger",
+                "am": "ቺዝ በርገር",
+                "om": "Bargarii Baadduu"
+            },
+            "price": 250,
+            "image": "images/burger/cheese-burger.jpg",
+            "ingredients": {
+                "en": "Beef patty, cheddar, pickles, tomato",
+                "am": "የበሬ ፓቲ, ቺድደር, ፒክልስ, ቲማቲም",
+                "om": "Foonii, cheddar, pickles, tamataa"
+            }
+        },
+        {
+            "name": {
+                "en": "Special Burger",
+                "am": "እስፔሻል በርገር",
+                "om": "Bargarii Ispeeshaalii"
+            },
+            "price": 380,
+            "image": "images/burger/special-burger.jpg",
+            "ingredients": {
+                "en": "Beef patty, cheddar, pickles, onion, special sauce",
+                "am": "የበሬ ፓቲ, ቺድደር, ፒክልስ, ሽንኩርት, ልዩ ሶስ",
+                "om": "Foonii, jibaa, pickles, qamadii, sossii adda"
+            }
+        },
+        {
+            "name": {
+                "en": "King Size Burger",
+                "am": "ኪንግ ሳይዝ በርገር",
+                "om": "Bargarii Hamma Guddaa (King Size)"
+            },
+            "price": 380,
+            "image": "images/burger/king-size-burger.jpg",
+            "ingredients": {
+                "en": "Double beef patties, cheese, bacon, lettuce, tomato, special sauce",
+                "am": "የድብ ፓቲዎች 2, ቺድደር, ቤከን, ሌትሩስ, ቲማቲም, ልዩ ሶስ",
+                "om": "Pattiiwwan lama, jibaa, bacon, salaata, tamataa, sossii adda"
+            }
+        },
+        {
+            "name": {
+                "en": "Chips",
+                "am": "ቺፕስ (ድንች ተጠብሶ)",
+                "om": "Chiipsii"
+            },
+            "price": 200,
+            "image": "images/burger/chips.jpg",
+            "ingredients": {
+                "en": "Fried potato, salt",
+                "am": "የተጠበሰ ድንች, ጨው",
+                "om": "Baradhoo bilcheessame, soogidda"
+            }
+        }
+    ],
+    "sandwich": [
+        {
+            "name": {
+                "en": "Chicken Sandwich",
+                "am": "የዶሮ ሳንድዊች",
+                "om": "Saandwiichii Lukkuu"
+            },
+            "price": 250,
+            "image": "images/sandwich/chicken-sandwich.jpg",
+            "ingredients": {
+                "en": "Grilled chicken, lettuce, tomato, cheese, mayo",
+                "am": "የተጠበሰ ዶሮ, ሌትሩስ, ቲማቲም, ጃቸር, ማዮ",
+                "om": "Lukkuu bilcheessame, salaata, tamataa, jibaa, mayo"
+            }
+        },
+        {
+            "name": {
+                "en": "Special Sandwich",
+                "am": "ልዩ ሳንድዊች",
+                "om": "Saandwiichii Ispeeshaalii"
+            },
+            "price": 250,
+            "image": "images/sandwich/special-sandwich.jpg",
+            "ingredients": {
+                "en": "Grilled chicken, lettuce, tomato, cheese, house mayo",
+                "am": "የተጠበሰ ዶሮ, ሌትሩስ, ቲማቲም, ጃቸር, ማዮ",
+                "om": "Lukkuu bilcheessame, salaata, tamataa, jibaa, mayo"
+            }
+        },
+        {
+            "name": {
+                "en": "Vegetable Sandwich",
+                "am": "የአትክልት ሳንድዊች",
+                "om": "Saandwiichii Kuduraa"
+            },
+            "price": 160,
+            "image": "images/sandwich/vegetable-sandwich.jpg",
+            "ingredients": {
+                "en": "Lettuce, tomato, cheese, mayo",
+                "am": "ሌትሩስ, ቲማቲም, ጃቸር, ማዮ",
+                "om": "Salaata, tamataa, jibaa, mayo"
+            }
+        },
+        {
+            "name": {
+                "en": "Fish Sandwich",
+                "am": "የአሳ ሳንድዊች",
+                "om": "Saandwiichii Qurxummii"
+            },
+            "price": 250,
+            "image": "images/sandwich/fish-sandwich.jpg",
+            "ingredients": {
+                "en": "Grilled fish, lettuce, tomato, cheese, mayo",
+                "am": "የተጠበሰ አሳ, ሌትሩስ, ቲማቲም, ጃቸር, ማዮ",
+                "om": "Qurxummii bilcheessame, salaata, tamataa, jibaa, mayo"
+            }
+        },
+        {
+            "name": {
+                "en": "Egg Sandwich",
+                "am": "የእንቁላል ሳንድዊች",
+                "om": "Saandwiichii killee"
+            },
+            "price": 160,
+            "image": "images/sandwich/egg-sandwich.jpg",
+            "ingredients": {
+                "en": "Boiled egg, lettuce, tomato, cheese, mayo",
+                "am": "የተጠበሰ እንቁላል, ሌትሩስ, ቲማቲም, ጃቸር, ማዮ",
+                "om": "Killee bilcheessame, salaata, tamataa, jibaa, mayo"
+            }
+        },
+        {
+            "name": {
+                "en": "Tuna Sandwich",
+                "am": "የቱና ሳንድዊች",
+                "om": "Saandwiichii Tuuna"
+            },
+            "price": 250,
+            "image": "images/sandwich/tuna-sandwich.jpg",
+            "ingredients": {
+                "en": "Tuna fish with mayonnaise and vegetables",
+                "am": "የቱና አሳ በማዮናን አትክልት ጋር",
+                "om": "Qurxummii tuuna biyya mayonnaise fi kuduraa waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Club Sandwich",
+                "am": "ክለብ ሳንድዊች",
+                "om": "Saandwiichii Kilaabii"
+            },
+            "price": 300,
+            "image": "images/sandwich/club-sandwich.jpg",
+            "ingredients": {
+                "en": "Chicken breast with vegetables and cheese in a club sandwich format",
+                "am": "የዶሮውስጥ አትክልትና ጃቸር፣በክለብ ሳንድዊችፋይል format",
+                "om": "Lukkuu bilcheessame kuduraa fi jibaa waliin saandwiichii kilaabii fayiluun"
+            }
+        }
+    ],
+    "pizza": [
+        {
+            "name": {
+                "en": "Special Pizza",
+                "am": "ልዩ ፒዛ",
+                "om": "Piizaa Addaa"
+            },
+            "price": 420,
+            "image": "images/pizza/Special-pizza.jpg",
+            "ingredients": {
+                "en": "Tomato sauce, mozzarella, pepperoni, olives, oregano",
+                "am": "የቲማቲም ሶስ, ሞዝሬላ, ፔፐሮኒ, ወፍራም, ኦርጋኖ",
+                "om": "Soosii tamatii, mozzarella, pepperoni, zayitii, oregano"
+            }
+        },
+        {
+            "name": {
+                "en": "Volcano Pizza",
+                "am": "ቮልኬኖ ፒዛ",
+                "om": "Piizaa Volkaanoo"
+            },
+            "price": 450,
+            "image": "images/pizza/Volcano-pizza.jpg",
+            "ingredients": {
+                "en": "Tomato sauce, mozzarella, pepperoni, olives, oregano",
+                "am": "የቲማቲም ሶስ, ሞዝሬላ, ፔፐሮኒ, ወፍራም, ኦርጋኖ",
+                "om": "Soosii tamatii, mozzarella, pepperoni, zayitii, oregano"
+            }
+        },
+        {
+            "name": {
+                "en": "Chicken Pizza",
+                "am": "የዶሮ ፒዛ",
+                "om": "Piizaa Lukkuu"
+            },
+            "price": 350,
+            "image": "images/pizza/Chicken-pizza.jpg",
+            "ingredients": {
+                "en": "Tomato sauce, mozzarella, chicken",
+                "am": "የቲማቲም ሶስ, ሞዝሬላ, ዶሮ",
+                "om": "Soosii tamatii, mozzarella, lukkuu"
+            }
+        },
+        {
+            "name": {
+                "en": "Tuna Pizza With Cheese",
+                "am": "የቱና ፒዛ (ቺዝ ጋር)",
+                "om": "Piizaa Tuuna (Baadduu Waliin)"
+            },
+            "price": 350,
+            "image": "images/pizza/Tuna-pizza-with-cheese.jpg",
+            "ingredients": {
+                "en": "Tomato sauce, mozzarella, tuna",
+                "am": "የቲማቲም ሶስ, ሞዝሬላ, ቹና",
+                "om": "Soosii tamatii, mozzarella, tuuna"
+            }
+        },
+        {
+            "name": {
+                "en": "Beef Pizza",
+                "am": "የሥጋ ፒዛ",
+                "om": "Piizaa Foonii"
+            },
+            "price": 350,
+            "image": "images/pizza/beef-pizza.jpg",
+            "ingredients": {
+                "en": "Tomato sauce, mozzarella, beef",
+                "am": "የቲማቲም ሶስ, ሞዝሬላ, ሥጋ",
+                "om": "Soosii tamatii, mozzarella, foonii"
+            }
+        },
+        {
+            "name": {
+                "en": "Vegetable Pizza",
+                "am": "የአትክልት ፒዛ",
+                "om": "Piizaa Kuduraa"
+            },
+            "price": 300,
+            "image": "images/pizza/vegetable-pizza.jpg",
+            "ingredients": {
+                "en": "Tomato sauce with vegetables and cheese",
+                "am": "የቲማቲም ሶስ፣አትክልትና ጃቸር",
+                "om": "Soosii tamatii kuduraa fi jibaa waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Vegetable Pizza With Tuna",
+                "am": "የአትክልት ፒዛ ከቱና ጋር",
+                "om": "Piizaa Kuduraa Tuuna Waliin"
+            },
+            "price": 300,
+            "image": "images/pizza/vegetable-pizza-tuna.jpg",
+            "ingredients": {
+                "en": "Tomato sauce with vegetables, cheese and tuna",
+                "am": "የቲማቲም ሶስ፣አትክልትና ጃቸር ከቱና ጋር",
+                "om": "Soosii tamatii kuduraa fi jibaa tuuna waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Margarita Pizza",
+                "am": "ማርጋሪታ ፒዛ",
+                "om": "Piizaa Maargariitaa"
+            },
+            "price": 250,
+            "image": "images/pizza/margarita-pizza.jpg",
+            "ingredients": {
+                "en": "Tomato sauce, mozzarella, basil",
+                "am": "የቲማቲም ሶስ, ሞዝሬላ, ባዚል",
+                "om": "Soosii tamatii, mozzarella, baazilii"
+            }
+        }
+    ],
+    "fish": [
+        {
+            "name": {
+                "en": "Fish Goulash",
+                "am": "የአሳ ጉላሽ",
+                "om": "Gulaashii Qurxummii"
+            },
+            "price": 350,
+            "image": "images/fish/fish-goulash.jpg",
+            "ingredients": {
+                "en": "fish, goulash, vegetables",
+                "am": "አሳ, ጉላሽ, አትክልት",
+                "om": "Qurxummii, gulaashii, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Chicken Fish",
+                "am": "ዶሮ አሳ",
+                "om": "Qurxummii Lukkuu"
+            },
+            "price": 300,
+            "image": "images/fish/chicken-fish.jpg",
+            "ingredients": {
+                "en": "fish, chicken sauce, vegetables",
+                "am": "አሳ, ዶሮ ሶስ, አትክልት",
+                "om": "Qurxummii, lukkuu sosii, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Fish Finger",
+                "am": "የአሳ ፊንገር",
+                "om": "Fiingerii Qurxummii"
+            },
+            "price": 300,
+            "image": "images/fish/fish-finger.jpg",
+            "ingredients": {
+                "en": "fish, breading, fried",
+                "am": "አሳ, ብረድ, ተጠብሶ",
+                "om": "Qurxummii, breading, bilcheessame"
+            }
+        },
+        {
+            "name": {
+                "en": "Fish Lebleb",
+                "am": "የአሳ ለብለብ",
+                "om": "Labilabbii Qurxummii"
+            },
+            "price": 300,
+            "image": "images/fish/fish-lebleb.jpg",
+            "ingredients": {
+                "en": "fish, lebleb, vegetables",
+                "am": "አሳ, ለብለብ, አትክልት",
+                "om": "Qurxummii, labilabbii, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Fasting Combo Fish",
+                "am": "የጾም የአሳ ኮምቦ",
+                "om": "Komboo Qurxummii Soomaa"
+            },
+            "price": 210,
+            "image": "images/fish/fastin-combo-fish.jpg",
+            "ingredients": {
+                "en": "fish, fasting sauce, vegetables",
+                "am": "አሳ, የጾም ሶስ, አትክልት",
+                "om": "Qurxummii, sosii soomaa, kuduraa"
+            }
+        }
+    ],
+    "rice": [
+        {
+            "name": {
+                "en": "Rice Vegetable",
+                "am": "ሩዝ ከአትክልት ጋር",
+                "om": "Ruuzii Kuduraa Waliin"
+            },
+            "price": 200,
+            "image": "images/rice/rice-vegetable.jpg",
+            "ingredients": {
+                "en": "rice, vegetable sauce, vegetables",
+                "am": "ሩዝ, አትክልት ሶስ, አትክልት",
+                "om": "Ruuzii, sosii kuduraa, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Rice Tomato",
+                "am": "ሩዝ በቲማቲም",
+                "om": "Ruuzii Timaatimii"
+            },
+            "price": 250,
+            "image": "images/rice/rice-tomato.jpg",
+            "ingredients": {
+                "en": "rice, tomato sauce, vegetables",
+                "am": "ሩዝ, ቲማቲም ሶስ, አትክልት",
+                "om": "Ruuzii, sosii tamatii, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Rice Meat",
+                "am": "ሩዝ ከሥጋ ጋር",
+                "om": "Ruuzii Foonii"
+            },
+            "price": 250,
+            "image": "images/rice/rice-meat.jpg",
+            "ingredients": {
+                "en": "rice, meat sauce, vegetables",
+                "am": "ሩዝ, ሥጋ ሶስ, አትክልት",
+                "om": "Ruuzii, foonii sosii, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Rice with Chicken",
+                "am": "ሩዝ ከዶሮ ጋር",
+                "om": "Ruuzii Lukkuu Waliin"
+            },
+            "price": 250,
+            "image": "images/rice/rice-chicken.jpg",
+            "ingredients": {
+                "en": "rice, chicken sauce, vegetables",
+                "am": "ሩዝ, ዶሮ ሶስ, አትክልት",
+                "om": "Ruuzii, lukkuu sosii, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Rice Tuna",
+                "am": "ሩዝ ከቱና ጋር",
+                "om": "Ruuzii Tuuna"
+            },
+            "price": 250,
+            "image": "images/rice/rice-tuna.jpg",
+            "ingredients": {
+                "en": "rice, tuna, vegetables",
+                "am": "ሩዝ, ቱና, አትክልት",
+                "om": "ruuzii, tuuna, kuduraa"
+            }
+        }
+    ],
+    "pasta": [
+        {
+            "name": {
+                "en": "Pasta with Tomato Sauce",
+                "am": "ፓስታ በቲማቲም ሶስ",
+                "om": "Paastaa Soosii Timaatimii"
+            },
+            "price": 250,
+            "image": "images/pasta/pasta-tomato-sauce.jpg",
+            "ingredients": {
+                "en": "pasta, tomato sauce, vegetables",
+                "am": "ፓስታ, ቲማቲም ሶስ, አትክልት",
+                "om": "Paastaa, sosii tamatii, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Pasta Tomato Cream Sauce",
+                "am": "ፓስታ በቲማቲም ክሬም ሶስ",
+                "om": "Paastaa Soosii Timaatimii Kireemii"
+            },
+            "price": 250,
+            "image": "images/pasta/pasta-tomato-cream-sauce.jpg"
+        },
+        {
+            "name": {
+                "en": "Pasta Chicken Sauce",
+                "am": "ፓስታ በዶሮ ሶስ",
+                "om": "Paastaa Soosii Lukkuu"
+            },
+            "price": 350,
+            "image": "images/pasta/pasta-chicken-sauce.jpg",
+            "ingredients": {
+                "en": "pasta, chicken sauce, vegetables",
+                "am": "ፓስታ, ዶሮ ሶስ, አትክልት",
+                "om": "Paastaa, sosii lukkuu, kuduraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Pasta Chicken Cream",
+                "am": "ፓስታ በዶሮ ክሬም",
+                "om": "Paastaa Lukkuu Kireemii"
+            },
+            "price": 350,
+            "image": "images/pasta/pasta-chicken-cream.jpg",
+            "ingredients": {
+                "en": "pasta, chicken cream sauce, vegetables",
+                "am": "ፓስታ, ዶሮ ክሬም ሶስ, አትክልት",
+                "om": "Paastaa, sosii lukkuu kireemii, kuduraa"
+            }
+        }
+    ],
+    "hot-drinks": [
+        {
+            "name": {
+                "en": "Tea",
+                "am": "ሻይ",
+                "om": "Shaayii"
+            },
+            "price": 25,
+            "image": "images/hot-drinks/tea.jpg",
+            "ingredients": {
+                "en": "Black tea with optional spices",
+                "am": "ጥቁር ሻይ ከእስፔሻል ቅመም ጋር የተለመደ",
+                "om": "Shaayii gurraacha dhangala'aa ispeeshaalii waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Coffee",
+                "am": "ቡና",
+                "om": "Bunaa"
+            },
+            "price": 60,
+            "image": "images/hot-drinks/coffee.jpg",
+            "ingredients": {
+                "en": "Ethiopian coffee brewed traditionally",
+                "am": "የኢትዮጵያ ቡና በባህላዊ መንገድ የተሰራ",
+                "om": "Bunaa Itoophiyaa kan aadaa ta'een bilcheessame"
+            }
+        },
+        {
+            "name": {
+                "en": "Macchiato",
+                "am": "ማኪያቶ",
+                "om": "Maakiyaatoo"
+            },
+            "price": 70,
+            "image": "images/hot-drinks/macchiato.jpg",
+            "ingredients": {
+                "en": "Espresso with a small amount of milk",
+                "am": "ኤስፕሬሶ ከትንሽ ወተት ጋር",
+                "om": "Espresso kan baay'ee xiqqoo aannan waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Milk",
+                "am": "ወተት",
+                "om": "Aannan"
+            },
+            "price": 60,
+            "image": "images/hot-drinks/milk.jpg",
+            "ingredients": {
+                "en": "Steamed milk, optionally flavored",
+                "am": "የተለመደ ወተት ከልዩ ጣዕም ጋር",
+                "om": "Aannan bilcheessame kan dhangala'aa adda addaa waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Fasting Macchiato",
+                "am": "የጾም ማኪያቶ",
+                "om": "Maakiyaatoo Soomaa"
+            },
+            "price": 70,
+            "image": "images/hot-drinks/fasting-macchiato.jpg",
+            "ingredients": {
+                "en": "Espresso with a small amount of milk and fasting spices",
+                "am": "ኤስፕሬሶ ከትንሽ ወተት እና የጾም ቅመም ጋር",
+                "om": "Espresso kan baay'ee xiqqoo aannan waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Cappuccino",
+                "am": "ካፑቺኖ",
+                "om": "Kaappuchiinnoo"
+            },
+            "price": 70,
+            "image": "images/hot-drinks/cappuccino.jpg",
+            "ingredients": {
+                "en": "Espresso with steamed milk and foam",
+                "am": "ኤስፕሬሶ ከወተት ጋር የተለመደ ካፑቺኖ",
+                "om": "Espresso kan aannan bilcheessame fi foam waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Hot Chocolate",
+                "am": "ሞቃት ቸኮሌት",
+                "om": "Chokoleetii Ho’aa"
+            },
+            "price": 70,
+            "image": "images/hot-drinks/chocolate.jpg",
+            "ingredients": {
+                "en": "Rich hot chocolate made with cocoa and milk",
+                "am": "በኮኮ እና ወተት የተሰራ ጥሩ ሞቃት ቸኮሌት",
+                "om": "Chokoleetii ho'aa kan dhangala'aa kakaawoo fi aannan waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Flavour Tea",
+                "am": "የተቀመመ ሻይ",
+                "om": "Shaayii Fileevaarii"
+            },
+            "price": 70,
+            "image": "images/hot-drinks/flavour-tea.jpg",
+            "ingredients": {
+                "en": "Black tea infused with various flavors",
+                "am": "ጥቁር ሻይ ከተለያዩ ጣዕሞች ጋር የተቀመመ",
+                "om": "Shaayii gurraacha kan dhangala'aa fileevaarii adda addaa waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Spice Tea",
+                "am": "እስፔሻል  ሻይ (ትልቅ)",
+                "om": "Shaayii Ispeeshaalii Guddaa"
+            },
+            "price": 50,
+            "image": "images/hot-drinks/spice-tea.jpg",
+            "ingredients": {
+                "en": "Black tea infused with a blend of spices",
+                "am": "ጥቁር ሻይ ከቅመም ጋር የተቀመመ",
+                "om": "Shaayii gurraacha kan dhangala'aa qamadii waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Special Tea Big",
+                "am": "እስፔሻል  ሻይ (ትልቅ)",
+                "om": "Shaayii Ispeeshaalii Guddaa"
+            },
+            "price": 100,
+            "image": "images/hot-drinks/special-tea-big.jpg",
+            "ingredients": {
+                "en": "Black tea infused with a blend of spices and flavors",
+                "am": "ጥቁር ሻይ ከቅመም እና ጣዕም ጋር የተቀመመ",
+                "om": "Shaayii gurraacha kan dhangala'aa qamadii fi fileevaarii adda addaa waliin"
+            }
+        },
+        {
+            "name": {
+                "en": "Special Tea Small",
+                "am": "እስፔሻል ሻይ (ትንሽ)",
+                "om": "Shaayii Ispeeshaalii Xiqqaa"
+            },
+            "price": 70,
+            "image": "images/hot-drinks/special-tea-small.jpg",
+            "ingredients": {
+                "en": "Black tea infused with a blend of spices and flavors",
+                "am": "ጥቁር ሻይ ከቅመም እና ጣዕም ጋር የተቀመመ",
+                "om": "Shaayii gurraacha kan dhangala'aa qamadii fi fileevaarii adda addaa waliin"
+            }
+        }
+    ],
+    "juice": [
+        {
+            "name": {
+                "en": "Special Juice",
+                "am": "እስፔሻል ጭማቂ",
+                "om": "Cuunfaa Ispeeshaalii"
+            },
+            "price": 300,
+            "image": "images/juice/special-juice.jpg",
+            "ingredients": {
+                "en": "Mixed fruits juice with a special blend of flavors",
+                "am": "የተቀላቀለ ፍራፍሬ ጭማቂ ከልዩ ጣዕም ጋር",
+                "om": "Cuunfaa fuduraa walmakaa fi dhangala'aa adda addaa"
+            }
+        },
+        {
+            "name": {
+                "en": "Mango Juice",
+                "am": "የማንጎ ጭማቂ",
+                "om": "Cuunfaa Maangoo"
+            },
+            "price": 280,
+            "image": "images/juice/mango-juice.jpg",
+            "ingredients": {
+                "en": "Fresh mango juice made from ripe mangoes",
+                "am": "የተለመደ የማንጎ ጭማቂ ከበግ የተለመደ ማንጎ የተለመደ",
+                "om": "Cuunfaa maangoo bilcheessame kan maangoo gabbataa irraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Papaya Juice",
+                "am": "የፓፓያ ጭማቂ",
+                "om": "Cuunfaa Paappaayaa"
+            },
+            "price": 280,
+            "image": "images/juice/papaya-juice.jpg",
+            "ingredients": {
+                "en": "Refreshing papaya juice made from ripe papayas",
+                "am": "የተለመደ የፓፓያ ጭማቂ ከበግ የተለመደ ፓፓያ የተለመደ",
+                "om": "Cuunfaa paappaayaa bilcheessame kan paappaayaa gabbataa irraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Sprite Juice",
+                "am": "ስፕራይስ ጭማቂ",
+                "om": "Cuunfaa Ispiriisii"
+            },
+            "price": 290,
+            "image": "images/juice/sprite-juice.jpg",
+            "ingredients": {
+                "en": "A fizzy juice blend inspired by the refreshing taste of Sprite",
+                "am": "የስፕራይስ ጭማቂ ከስፕራይስ የተነሳ የተለመደ ጭማቂ",
+                "om": "Cuunfaa ispiriisii kan dhangala'aa sprite irraa fudhatame"
+            }
+        },
+        {
+            "name": {
+                "en": "Banana Juice",
+                "am": "የሙዝ ጭማቂ",
+                "om": "Cuunfaa Muuzii"
+            },
+            "price": 270,
+            "image": "images/juice/banana-juice.jpg",
+            "ingredients": {
+                "en": "Creamy banana juice made from ripe bananas",
+                "am": "የተለመደ የሙዝ ጭማቂ ከበግ የተለመደ ሙዝ የተለመደ",
+                "om": "Cuunfaa muuzii bilcheessame kan muuzii gabbataa irraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Strawberry Juice",
+                "am": "የስትሮቤሪ ጭማቂ",
+                "om": "Cuunfaa Istiroobarii"
+            },
+            "price": 290,
+            "image": "images/juice/strawberry-juice.jpg",
+            "ingredients": {
+                "en": "Sweet and tangy strawberry juice made from fresh strawberries",
+                "am": "የተለመደ የስትሮቤሪ ጭማቂ ከበግ የተለመደ ስትሮቤሪ የተለመደ",
+                "om": "Cuunfaa istiroobarii bilcheessame kan istiroobarii haaraa irraa"
+            }
+        },
+        {
+            "name": {
+                "en": "Fasting Special Juice",
+                "am": "የጾም እስፔሻል ጭማቂ",
+                "om": "Cuunfaa Ispeeshaalii Soomaa"
+            },
+            "price": 290,
+            "image": "images/juice/fasting-special-juice.jpg",
+            "ingredients": {
+                "en": "A special juice blend designed for fasting periods, made with a mix of fruits and natural sweeteners",
+                "am": "የጾም ዘመን የተለመደ የጭማቂ እስፔሻል ጭማቂ ከፍራፍሬ እና በተፈጥሮ የተለመደ ጣዕም ጋር",
+                "om": "Cuunfaa ispeeshaalii soomaa kan yeroo soomaaaf qophaa'e, kan furaa fuduraa fi dhangala'aa uumamaa waliin"
+            }
+        }
+    ],
+    "soft-drinks": [
+        {
+            "name": {
+                "en": "Soft Drink",
+                "am": "ለስላሳ መጠጦች",
+                "om": "Dhugaatii Lalaafaa"
+            },
+            "price": 50,
+            "image": "images/soft-drinks/soft-drink.jpg"
+        },
+        {
+            "name": {
+                "en": "Ambo Water",
+                "am": "አምቦ ውሃ",
+                "om": "Bishaan Aamboo"
+            },
+            "price": 40,
+            "image": "images/soft-drinks/ambo-water.jpg"
+        },
+        {
+            "name": {
+                "en": "1/2 L Water",
+                "am": "ግማሽ ሊትር ውሃ",
+                "om": "Bishaan Liitira ½"
+            },
+            "price": 30,
+            "image": "images/soft-drinks/half-l-water.jpg"
+        },
+        {
+            "name": {
+                "en": "1 L Water",
+                "am": "1 ሊትር ውሃ",
+                "om": "Bishaan Liitira 1"
+            },
+            "price": 35,
+            "image": "images/soft-drinks/one-l-water.jpg"
+        },
+        {
+            "name": {
+                "en": "2 L Water",
+                "am": "2 ሊትር ውሃ",
+                "om": "Bishaan Liitira 2"
+            },
+            "price": 40,
+            "image": "images/soft-drinks/two-l-water.jpg"
+        },
+        {
+            "name": {
+                "en": "Novida",
+                "am": "ኖቪዳ",
+                "om": "Nooviidaa"
+            },
+            "price": 60,
+            "image": "images/soft-drinks/novida.jpg"
+        },
+        {
+            "name": {
+                "en": "Nigus Malt",
+                "am": "ንጉስ ማልት",
+                "om": "Maaltii Niigus"
+            },
+            "price": 60,
+            "image": "images/soft-drinks/nigus-malt.jpg"
+        }
+    ]
+}
