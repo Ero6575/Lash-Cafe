@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiter Dashboard | የአስተናጋጅ ዳሽቦርድ</title>
+    <link rel="stylesheet" href="css/waiter.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- Header - Fixed -->
+        <header class="header">
+            <div class="header-top">
+                <h1 class="logo">🍽️ <span data-translate="waiterDashboard">Waiter Dashboard</span></h1>
+                <button class="lang-btn" onclick="switchLanguage()">
+                    <span id="langToggle">አማ</span>
+                </button>
+            </div>
+
+            <div class="header-form">
+                <div class="form-group">
+                    <label data-translate="waiterName">Waiter Name</label>
+                    <input type="text" id="waiterName" placeholder="Enter your name" data-placeholder="enterName">
+                </div>
+
+                <div class="form-group">
+                    <label data-translate="tableNumber" for="tableNumber">Table Number</label>
+                    <select id="tableNumber">
+                        <option value="">Select Table</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Menu Section -->
+            <section class="menu-section">
+                <div class="section-header">
+                    <h2 data-translate="menu">Menu</h2>
+                    <input type="search" id="searchMenu" class="search-input" placeholder="Search menu..."
+                        data-placeholder="searchMenu">
+                </div>
+
+                <!-- Categories - Sticky -->
+                <div class="categories-wrapper">
+                    <div class="categories" id="categories">
+                        <button class="category-btn active" data-category="all">All</button>
+                    </div>
+                </div>
+
+                <!-- Menu Items Grid -->
+                <div class="menu-grid" id="menuGrid">
+                    <div class="loading">Loading menu...</div>
+                </div>
+            </section>
+
+            <!-- Cart Section - At Bottom of Page -->
+            <section class="cart-section" id="cartSection">
+                <div class="cart-header">
+                    <h2>
+                        🛒 <span data-translate="currentOrder">Current Order</span>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </h2>
+                </div>
+
+                <!-- Cart Items - Always Visible -->
+                <div class="cart-items">
+                    <div class="cart-items-inner" id="cartItems">
+                        <div class="empty-cart" data-translate="emptyCart">No items added yet</div>
+                    </div>
+                </div>
+
+                <!-- Cart Footer -->
+                <div class="cart-footer">
+                    <div class="cart-total">
+                        <span data-translate="total">Total</span>
+                        <span id="cartTotal">0 Birr</span>
+                    </div>
+                    <button class="submit-btn" id="submitOrder" disabled>
+                        <span data-translate="sendToKitchen">Send to Kitchen</span>
+                        <span class="btn-icon">🚀</span>
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../kitchen/js/supabase-config.js"></script>
+    <script src="js/waiter.js"></script>
+</body>
+
+</html>

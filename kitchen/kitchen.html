@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Display</title>
+    <link rel="stylesheet" href="css/kitchen.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-left">
+                <h1 class="logo">Kitchen Display</h1>
+                <span class="live-badge">LIVE</span>
+            </div>
+            <div class="header-right">
+                <div class="stats">
+                    <div class="stat pending">
+                        <span class="stat-count" id="pendingCount">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="stat preparing">
+                        <span class="stat-count" id="preparingCount">0</span>
+                        <span class="stat-label">Preparing</span>
+                    </div>
+                    <div class="stat ready">
+                        <span class="stat-count" id="readyCount">0</span>
+                        <span class="stat-label">Ready</span>
+                    </div>
+                </div>
+                <button class="lang-btn" onclick="switchLanguage()">
+                    <span id="langToggle">AM</span>
+                </button>
+            </div>
+        </header>
+        <main class="orders-container">
+            <div class="orders-grid" id="ordersGrid">
+                <div class="empty-state">
+                    <span class="empty-icon">🍳</span>
+                    <h2>No active orders</h2>
+                    <p>Waiting for orders...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/kitchen.js"></script>
+</body>
+
+</html>

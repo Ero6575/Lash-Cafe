@@ -13,7 +13,7 @@
 <body>
     <header>
         <div class="logo">
-            <h1> Lash Burger & Pizza</h1>
+            <h1>Lash Burger & Pizza</h1>
         </div>
         <div class="welcome">
             <p id="welcome-text">Welcome to our restaurant! Enjoy our delicious menu.</p>
@@ -51,25 +51,30 @@
         <!-- Menu items will be rendered here -->
     </main>
 
-    <script src="js/supabase-config.js"></script>
+    <!-- STEP 1: Load Supabase library FIRST -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
-    <script src="js/menu.js"></script>
+
+    <!-- STEP 2: Supabase config INLINE (no path issues) -->
     <script>
-        // Dev helper: unregister any active service workers then load latest app.js
-        (async function loadLatestApp() {
-            try {
-                if ('serviceWorker' in navigator) {
-                    const regs = await navigator.serviceWorker.getRegistrations();
-                    await Promise.all(regs.map(r => r.unregister().catch(() => { })));
-                }
-            } catch (e) {/* ignore */ }
-            const s = document.createElement('script');
-            // force a fresh f etch of app.js during development by adding a timestamp
-            s.src = 'app.js?v=3&t=' + Date.now();
-            s.defer = false;
-            document.body.appendChild(s);
-        })();
+        window.SUPABASE_URL = 'https://uffpgrzoxsbecvgeynxp.supabase.co';
+        window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmZnBncnpveHNiZWN2Z2V5bnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExNDE1NTcsImV4cCI6MjA4NjcxNzU1N30.UFuBmJ9C0xpvHbVndXtSB52R3Ehc1jzzaE068hpMnJA';
+
+        if (window.supabase && typeof window.supabase.createClient === 'function') {
+            if (!window.SUPABASE_CLIENT) {
+                window.SUPABASE_CLIENT = window.supabase.createClient(
+                    window.SUPABASE_URL,
+                    window.SUPABASE_ANON_KEY
+                );
+                console.log('✅ Supabase client created (single instance)');
+            }
+        }
     </script>
+
+    <!-- STEP 3: Load menu.js if needed -->
+    <script src="js/menu.js"></script>
+
+    <!-- STEP 4: Load app.js directly -->
+    <script src="app.js?v=4"></script>
 </body>
 
 </html>

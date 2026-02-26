@@ -37,12 +37,10 @@
             <section id="content-area">
                 <div id="loading" class="loading">Loading...</div>
 
-                <!-- Category cards grid (default Menu Items view) -->
                 <div id="category-cards-view" class="hidden">
                     <div id="category-cards-grid" class="category-cards-grid"></div>
                 </div>
 
-                <!-- Items list within a selected category -->
                 <div id="category-items-view" class="hidden">
                     <div class="items-header">
                         <button id="back-to-categories" class="btn">← Back</button>
@@ -51,7 +49,6 @@
                     <div id="items-list" class="items-grid"></div>
                 </div>
 
-                <!-- Category management view -->
                 <div id="categories-view" class="card hidden">
                     <div class="category-controls">
                         <input id="new-category-name" placeholder="New category name">
@@ -116,11 +113,11 @@
                     </div>
                     <div class="field">
                         <label class="field-label" for="item-image-url">Image URL</label>
-                        <input id="item-image-url" type="text" placeholder="Or paste image URL (absolute or relative)">
+                        <input id="item-image-url" type="text" placeholder="Or paste image URL">
                     </div>
                 </div>
 
-                <div id="item-image-preview-wrap" class="image-preview">
+                <div id="item-image-preview-wrap" class="image-preview" style="display:none;">
                     <label class="field-label">Preview</label>
                     <img id="item-image-preview" src="" alt="preview">
                 </div>
@@ -146,7 +143,6 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <!-- Busy overlay to prevent flicker during loads -->
     <div id="busy-overlay" class="busy-overlay" aria-hidden="true">
         <div class="busy-inner">
             <div class="spinner" aria-hidden="true"></div>
@@ -154,19 +150,10 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase-config.js"></script>
+    <script src="../js/vendor/supabase.min.js"></script>
+    <script src="../kitchen/js/supabase-config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/dashboard.js"></script>
-    <script>
-        // Minimal config check: silently redirect to login if supabase config missing
-        (function () {
-            try {
-                if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) { location.href = 'login.html'; }
-            } catch (e) { /* ignore */ }
-        })();
-    </script>
-    <!-- Removed service worker unregistration to avoid race conditions and flicker -->
 </body>
 
 </html>

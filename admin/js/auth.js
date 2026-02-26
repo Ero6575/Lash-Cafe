@@ -1,234 +1,307 @@
-// admin/js/auth.js — robust sign up / sign in handling
+// admin/js/auth.js — FIXED VERSION with better error handling
 (async function () {
-    // Config helper
-    const SUPABASE_URL = window.SUPABASE_URL;
-    const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY;
+    var signinMsg = document.getElementById('signin-msg');
+    var signupMsg = document.getElementById('signup-msg');
+    var authPage = document.getElementById('auth-page');
+    var redirecting = false;
 
-    const signinMsg = document.getElementById('signin-msg');
-    const signupMsg = document.getElementById('signup-msg');
-    const authPage = document.getElementById('auth-page');
+    function revealPage() {
+        if (authPage) authPage.classList.add('ready');
+    }
 
-    function revealPage() { try { if (authPage) authPage.classList.add('ready'); } catch (e) { } }
+    function showSigninMsg(text) {
+        console.log('SIGNIN MSG:', text);
+        if (signinMsg) signinMsg.textContent = text;
+    }
 
-    // Clear any residual message containers so the login UI is clean on first paint
+    function showSignupMsg(text) {
+        console.log('SIGNUP MSG:', text);
+        if (signupMsg) signupMsg.textContent = text;
+    }
+
+    // Clear messages
     if (signinMsg) signinMsg.textContent = '';
     if (signupMsg) signupMsg.textContent = '';
 
-    // If opened via file:// log a warning (do not show it in UI)
-    if (location.protocol === 'file:') {
-        console.warn('Running admin over file:// may break authentication; serve via http://localhost or a static host.');
+    // Wait for Supabase to load
+    var attempts = 0;
+    while (!window.supabase && attempts < 50) {
+        await new Promise(function (r) { setTimeout(r, 100); });
+        attempts++;
     }
 
-    // Basic config check
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-        // silently redirect to login/root if misconfigured
-        console.error('Supabase not configured — missing SUPABASE_URL or SUPABASE_ANON_KEY.');
-        try { location.href = 'login.html'; } catch (e) { }
+    if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY || !window.supabase) {
+        revealPage();
+        showSigninMsg('Failed to load. Please refresh the page.');
+        console.error('Supabase not loaded');
         return;
     }
 
-    if (!window.supabase || typeof window.supabase.createClient !== 'function') {
-        // Keep this as a developer console error only (avoid polluting UI)
-        console.error('Supabase client library not loaded. Ensure the Supabase CDN script is included before auth scripts.');
-        return;
+    console.log('✅ Supabase loaded');
+
+    // Create Supabase client
+    var supabase = window.SUPABASE_CLIENT;
+    if (!supabase) {
+        supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+        window.SUPABASE_CLIENT = supabase;
     }
 
-    // Create or reuse client (prefer global single client to avoid multiple GoTrue instances)
-    const supabase = window.SUPABASE_CLIENT || (window.supabase && typeof window.supabase.createClient === 'function' ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null);
-    if (!supabase) { console.error('auth.js: Supabase client not available'); revealPage(); return; }
-    console.log('auth.js: Supabase client ready');
+    console.log('✅ Supabase client ready');
 
-    // If a session exists, immediately redirect to dashboard without revealing login
+    // Check if already logged in
     try {
-        if (supabase.auth && typeof supabase.auth.getSession === 'function') {
-            const { data } = await supabase.auth.getSession();
-            if (data && data.session) { console.log('auth.js: session exists — redirecting'); location.href = 'dashboard.html'; return; }
-        } else if (supabase.auth && typeof supabase.auth.session === 'function') {
-            const s = supabase.auth.session(); if (s) { console.log('auth.js: session exists (legacy) — redirecting'); location.href = 'dashboard.html'; return; }
+        var result = await supabase.auth.getSession();
+        if (result.data && result.data.session && !redirecting) {
+            console.log('✅ Already logged in, redirecting...');
+            redirecting = true;
+            window.location.replace('dashboard.html');
+            return;
         }
-    } catch (e) { console.warn('auth.js: session check failed', e); }
+    } catch (e) {
+        console.log('Session check error:', e);
+    }
 
-    // No existing session — reveal page
+    // Show login form
     revealPage();
 
-    // Elements (do not change structure)
-    const signinForm = document.getElementById('signin-form');
-    const signupForm = document.getElementById('signup-form');
-    const showSignup = document.getElementById('show-signup');
-    const showSignin = document.getElementById('show-signin');
+    // Get form elements
+    var signinForm = document.getElementById('signin-form');
+    var signupForm = document.getElementById('signup-form');
+    var showSignup = document.getElementById('show-signup');
+    var showSignin = document.getElementById('show-signin');
 
-    // Defensive: ensure forms exist
-    if (!signinForm || !signupForm) {
-        console.error('auth.js: signin or signup form not found in DOM. Check your HTML.');
-        return;
+    // Toggle between signin and signup forms
+    if (showSignup) {
+        showSignup.addEventListener('click', function (e) {
+            e.preventDefault();
+            signinForm.classList.remove('active');
+            signupForm.classList.add('active');
+            showSigninMsg('');
+            showSignupMsg('');
+        });
     }
 
-    // Toggle links (safe-guard with checks)
-    if (showSignup) showSignup.addEventListener('click', (e) => { e.preventDefault(); signupForm.classList.add('active'); signinForm.classList.remove('active'); });
-    if (showSignin) showSignin.addEventListener('click', (e) => { e.preventDefault(); signinForm.classList.add('active'); signupForm.classList.remove('active'); });
+    if (showSignin) {
+        showSignin.addEventListener('click', function (e) {
+            e.preventDefault();
+            signupForm.classList.remove('active');
+            signinForm.classList.add('active');
+            showSigninMsg('');
+            showSignupMsg('');
+        });
+    }
 
-    function showSigninMsg(text) { if (signinMsg) signinMsg.textContent = text; }
-    function showSignupMsg(text) { if (signupMsg) signupMsg.textContent = text; }
-
-    function validatePassword(p) { return p && p.length >= 8; }
-
-    // Ensure the signed-in user is recorded as an owner (first user rule handled by RLS policy/trigger)
+    // Create owner record with retry
     async function ensureOwner(user) {
-        if (!user || !user.id) return;
-        try {
-            const { error } = await supabase.from('owners').insert([{ user_id: user.id, email: user.email }]);
-            if (error) {
-                // expected for most users (only first insert allowed by policy)
-                console.log('ensureOwner: insert returned error (likely not first user)', error.message || error);
-            } else {
-                console.log('ensureOwner: owner record created for', user.email);
-            }
-        } catch (e) {
-            console.warn('ensureOwner failed', e);
+        if (!user || !user.id) {
+            console.error('No user provided to ensureOwner');
+            return false;
         }
+
+        console.log('Creating/updating owner for user:', user.id);
+
+        var retries = 3;
+        while (retries > 0) {
+            try {
+                var checkResult = await supabase
+                    .from('owners')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (checkResult.data) {
+                    console.log('✅ Owner already exists:', checkResult.data);
+                    return true;
+                }
+
+                // Create new owner
+                var insertResult = await supabase
+                    .from('owners')
+                    .insert([{
+                        user_id: user.id,
+                        email: user.email,
+                        is_active: true
+                    }]);
+
+                if (insertResult.error) {
+                    console.error('Owner insert error:', insertResult.error);
+                    retries--;
+                    await new Promise(r => setTimeout(r, 500));
+                    continue;
+                }
+
+                console.log('✅ Owner created successfully');
+                return true;
+
+            } catch (e) {
+                console.error('ensureOwner error:', e);
+                retries--;
+                if (retries > 0) {
+                    await new Promise(r => setTimeout(r, 500));
+                }
+            }
+        }
+
+        console.error('❌ Failed to create owner after retries');
+        return false;
     }
-
-    // SIGN UP (create owner account)
-    let signupInProgress = false;
-    signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (signupInProgress) return; // guard against double-submit
-        signupInProgress = true;
-        showSignupMsg('');
-        console.log('auth.js: signup form submitted');
-
-        const signupBtn = document.getElementById('signup-btn');
-        const origSignupText = signupBtn ? signupBtn.textContent : 'Sign Up';
-        if (signupBtn) {
-            signupBtn.disabled = true;
-            // set innerHTML with spinner for consistent reset
-            signupBtn.innerHTML = origSignupText + ' <span class="btn-spinner" aria-hidden="true"></span>';
-        }
-
-        const email = document.getElementById('signup-email').value.trim();
-        const password = document.getElementById('signup-password').value;
-        const confirm = document.getElementById('signup-password-confirm').value;
-
-        if (!email) { showSignupMsg('Email is required'); signupInProgress = false; if (signupBtn) { signupBtn.disabled = false; signupBtn.innerHTML = origSignupText; } return; }
-        if (!validatePassword(password)) { showSignupMsg('Password must be at least 8 characters'); signupInProgress = false; if (signupBtn) { signupBtn.disabled = false; signupBtn.innerHTML = origSignupText; } return; }
-        if (password !== confirm) { showSignupMsg('Passwords do not match'); signupInProgress = false; if (signupBtn) { signupBtn.disabled = false; signupBtn.innerHTML = origSignupText; } return; }
-
-        showSignupMsg('Creating account...');
-
-        try {
-            let res;
-            // Try modern API
-            if (supabase.auth && typeof supabase.auth.signUp === 'function') {
-                res = await supabase.auth.signUp({ email, password });
-            } else if (supabase.auth && typeof supabase.auth.api === 'object' && typeof supabase.auth.api.createUser === 'function') {
-                // older SDK fallback (rare)
-                res = await supabase.auth.api.createUser({ email, password });
-            } else {
-                throw new Error('Supabase auth API not available');
-            }
-
-            console.log('auth.js: signup response', res);
-            const error = res.error || (res.data && res.data.error);
-            const data = res.data || res;
-
-            if (error) {
-                console.error('auth.js: signup error', error);
-                showSignupMsg(error.message || String(error));
-                signupInProgress = false;
-                if (signupBtn) { signupBtn.disabled = false; signupBtn.innerHTML = origSignupText; }
-                return;
-            }
-
-            // If session present we are signed in immediately; otherwise confirm via email may be needed
-            const hasSession = Boolean(data && (data.session || data.user && data.session));
-            if (hasSession) {
-                // try to ensure owner record exists (RLS may allow first insert) — don't block redirect
-                try { ensureOwner(data.user || (res && res.user)); } catch (e) { /* ignore */ }
-                showSignupMsg('Account created and signed in. Redirecting...');
-                // Redirect immediately for smooth UX
-                location.href = 'dashboard.html';
-                return;
-            } else {
-                showSignupMsg('Account created. Please check your email to confirm (if required), then sign in.');
-            }
-        } catch (err) {
-            console.error('auth.js: signup exception', err);
-            showSignupMsg(err.message || 'Sign up failed');
-        } finally {
-            signupInProgress = false;
-            if (signupBtn) { signupBtn.disabled = false; signupBtn.innerHTML = (typeof origSignupText !== 'undefined' ? origSignupText : 'Sign Up'); }
-        }
-    });
 
     // SIGN IN
-    let signinInProgress = false;
-    signinForm.addEventListener('submit', async (e) => {
+    var signinBusy = false;
+    signinForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        if (signinInProgress) return; // prevent double-submit
-        signinInProgress = true;
-        showSigninMsg('');
-        console.log('auth.js: signin form submitted');
+        if (signinBusy || redirecting) return;
+        signinBusy = true;
 
-        const signinBtn = document.getElementById('signin-btn');
-        const origSigninText = signinBtn ? signinBtn.textContent : 'Sign In';
-        if (signinBtn) {
-            signinBtn.disabled = true;
-            signinBtn.innerHTML = origSigninText + ' <span class="btn-spinner" aria-hidden="true"></span>';
+        var btn = document.getElementById('signin-btn');
+        var originalText = btn ? btn.textContent : 'Sign In';
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Signing in...';
         }
 
-        const email = document.getElementById('signin-email').value.trim();
-        const password = document.getElementById('signin-password').value;
+        var email = document.getElementById('signin-email').value.trim();
+        var password = document.getElementById('signin-password').value;
 
-        if (!email || !password) { showSigninMsg('Email and password are required'); signinInProgress = false; if (signinBtn) { signinBtn.disabled = false; signinBtn.innerHTML = origSigninText; } return; }
+        if (!email || !password) {
+            showSigninMsg('Email and password required');
+            resetButton();
+            return;
+        }
 
-        showSigninMsg('Signing in...');
+        console.log('Attempting sign in for:', email);
 
         try {
-            let res;
-            if (supabase.auth && typeof supabase.auth.signInWithPassword === 'function') {
-                res = await supabase.auth.signInWithPassword({ email, password });
-            } else if (supabase.auth && typeof supabase.auth.signIn === 'function') {
-                // older SDK fallback
-                res = await supabase.auth.signIn({ email, password });
-            } else {
-                throw new Error('Supabase auth API not available');
-            }
+            var result = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
 
-            console.log('auth.js: signin response', res);
-            const error = res.error || (res.data && res.data.error);
-            const data = res.data || res;
-
-            if (error) {
-                console.error('auth.js: signin error', error);
-                showSigninMsg(error.message || String(error));
-                signinInProgress = false;
-                if (signinBtn) { signinBtn.disabled = false; signinBtn.innerHTML = origSigninText; }
+            if (result.error) {
+                console.error('Sign in error:', result.error);
+                showSigninMsg(result.error.message);
+                resetButton();
                 return;
             }
 
-            // If we have a session or user, redirect
-            const hasSession = Boolean(data && (data.session || data.user || data.access_token || data.provider_token));
-            if (hasSession) {
-                showSigninMsg('Signed in. Redirecting...');
-                try {
-                    const user = (data && data.user) || res.user || null;
-                    if (user && user.id) {
-                        await ensureOwner(user);
-                    }
-                } catch (e) { console.warn('ensureOwner failed', e); }
-                setTimeout(() => location.href = 'dashboard.html', 400);
+            if (result.data && result.data.session) {
+                console.log('✅ Sign in successful');
+                showSigninMsg('Signed in! Setting up...');
+
+                // Ensure owner exists
+                var ownerCreated = await ensureOwner(result.data.user);
+
+                if (!ownerCreated) {
+                    showSigninMsg('Warning: Owner setup incomplete, but proceeding...');
+                }
+
+                showSigninMsg('Success! Redirecting...');
+
+                // Small delay to ensure everything is ready
+                await new Promise(r => setTimeout(r, 500));
+
+                redirecting = true;
+                window.location.replace('dashboard.html');
             } else {
-                // No session returned - likely email confirm required
-                showSigninMsg('Signed in but no session found. If your project requires email confirmation, check your email.');
+                showSigninMsg('Login failed. Please try again.');
+                resetButton();
             }
         } catch (err) {
-            console.error('auth.js: signin exception', err);
-            showSigninMsg(err.message || 'Sign in failed');
-        } finally {
-            signinInProgress = false;
-            if (signinBtn) { signinBtn.disabled = false; signinBtn.innerHTML = (typeof origSigninText !== 'undefined' ? origSigninText : 'Sign In'); }
+            console.error('Sign in exception:', err);
+            showSigninMsg(err.message || 'Login failed');
+            resetButton();
+        }
+
+        function resetButton() {
+            signinBusy = false;
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
         }
     });
 
-    // NOTE: auth state changes and initial session check handled above; avoid onAuthStateChange here to prevent redirect loops/flicker
+    // SIGN UP
+    var signupBusy = false;
+    signupForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (signupBusy || redirecting) return;
+        signupBusy = true;
+
+        var btn = document.getElementById('signup-btn');
+        var originalText = btn ? btn.textContent : 'Sign Up';
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Creating account...';
+        }
+
+        var email = document.getElementById('signup-email').value.trim();
+        var password = document.getElementById('signup-password').value;
+        var confirm = document.getElementById('signup-password-confirm').value;
+
+        if (!email) {
+            showSignupMsg('Email required');
+            resetButton();
+            return;
+        }
+
+        if (!password || password.length < 8) {
+            showSignupMsg('Password must be at least 8 characters');
+            resetButton();
+            return;
+        }
+
+        if (password !== confirm) {
+            showSignupMsg('Passwords do not match');
+            resetButton();
+            return;
+        }
+
+        console.log('Attempting sign up for:', email);
+
+        try {
+            var result = await supabase.auth.signUp({
+                email: email,
+                password: password
+            });
+
+            if (result.error) {
+                console.error('Sign up error:', result.error);
+                showSignupMsg(result.error.message);
+                resetButton();
+                return;
+            }
+
+            if (result.data && result.data.session) {
+                console.log('✅ Sign up successful with session');
+                showSignupMsg('Account created! Setting up...');
+
+                await ensureOwner(result.data.user);
+                showSignupMsg('Success! Redirecting...');
+
+                await new Promise(r => setTimeout(r, 500));
+
+                redirecting = true;
+                window.location.replace('dashboard.html');
+            } else {
+                console.log('Sign up successful but no session (email confirmation required)');
+                showSignupMsg('Account created! Check your email to confirm, then sign in.');
+                resetButton();
+            }
+        } catch (err) {
+            console.error('Sign up exception:', err);
+            showSignupMsg(err.message || 'Sign up failed');
+            resetButton();
+        }
+
+        function resetButton() {
+            signupBusy = false;
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+    });
+
+    console.log('✅ Auth.js loaded');
 })();

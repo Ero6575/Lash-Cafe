@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Login — Lash Menu</title>
     <link rel="stylesheet" href="../style.css">
+    <style>
+        .auth-page {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .auth-page.ready {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
 </head>
 
 <body class="admin">
@@ -56,19 +68,12 @@
                 </form>
             </div>
 
-            <footer class="card-foot">
-                <!-- footer intentionally left blank to reduce UI clutter -->
-            </footer>
+            <footer class="card-foot"></footer>
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase-config.js"></script>
-    <style>
-        /* Keep auth page hidden until JS reveals it to avoid flicker */
-        .auth-page { opacity: 0; transition: opacity 0.3s ease; }
-        .auth-page.ready { opacity: 1; }
-    </style>
+    <script src="../js/vendor/supabase.min.js"></script>
+    <script src="../kitchen/js/supabase-config.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/auth-ui.js"></script>
 </body>

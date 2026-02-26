@@ -1,16 +1,14 @@
-# ☕ Lash Café — Digital Hotel Menu
+# 🍔 Lash Burger & Pizza — Digital Menu System
 
-A modern, multilingual digital restaurant menu system. Customers scan a QR code to browse the menu on their phone. The restaurant owner manages everything through a secure admin dashboard — no app downloads required.
+A complete digital restaurant management system with customer menu, admin dashboard, waiter ordering, and kitchen display.
 
-![Status](https://img.shields.io/badge/status-live-brightgreen)
-![Cost](https://img.shields.io/badge/hosting-free-blue)
-![Languages](https://img.shields.io/badge/languages-EN%20|%20AM%20|%20OM-orange)
+🌐 **Live:** [https://lash-cafe.netlify.app](https://lash-cafe.netlify.app)
 
 ---
 
 ## ✨ Features
 
-### Customer Side
+### 🍽️ Customer Side
 - 📱 **QR Code Access** — Scan and browse, no app needed
 - 🌍 **Multilingual** — English, Amharic (አማርኛ), Afaan Oromoo
 - 🔍 **Search & Filter** — Find items by name, ingredients, or price
@@ -19,8 +17,8 @@ A modern, multilingual digital restaurant menu system. Customers scan a QR code 
 - 📶 **Offline Support** — Service worker caches content for offline viewing
 - 📲 **PWA Ready** — Installable as a mobile app
 
-### Admin Dashboard
-- 🔐 **Secure Login** — Owner-only access, no public registration
+### 🔐 Admin Dashboard
+- 🔑 **Secure Login** — Owner-only access with Supabase authentication
 - ➕ **Full CRUD** — Create, Read, Update, Delete menu items
 - 📁 **Category Management** — Add, rename, delete categories
 - 🖼️ **Image Upload** — Upload food photos or paste image URLs
@@ -28,20 +26,31 @@ A modern, multilingual digital restaurant menu system. Customers scan a QR code 
 - 🔄 **Real-time Sync** — Changes reflect instantly on the customer page
 - 🔍 **Search Items** — Quick search across all menu items
 
+### 🧑‍💼 Waiter Panel
+- 🪑 **Table Selection** — Choose table number for each order
+- 📋 **Menu Browsing** — Browse full menu and add items to order
+- 📝 **Special Notes** — Add notes for kitchen (allergies, preferences)
+- 🚀 **Send to Kitchen** — Submit orders directly to kitchen display
+- 📊 **Order Tracking** — Track order status in real-time
+- 🕐 **Recent Orders** — View order history
+
+### 👨‍🍳 Kitchen Display
+- 📺 **Real-time Orders** — Orders appear instantly from waiter panel
+- 🔔 **Sound Notifications** — Audio alert for new incoming orders
+- 🎨 **Color-coded Status** — Visual status (Pending → Preparing → Ready → Served)
+- ✅ **Status Management** — Update order progress with one click
+- 🔄 **Auto-refresh** — Orders update automatically
+
 ---
 
 ## 🛠️ Tech Stack
 
 | Component | Technology |
-|-----------|-----------|
-| Frontend | HTML, CSS, Vanilla JavaScript |
-| Database | [Supabase](https://supabase.com) (PostgreSQL) |
-| Auth | Supabase Authentication |
-| Storage | Supabase Storage (food images) |
-| Real-time | Supabase Realtime (PostgreSQL Changes) |
-| Hosting | [Netlify](https://netlify.com) (Free tier) |
-| Offline | Service Worker + Cache API |
-
-
-
-
+|-----------|------------|
+| Frontend | HTML, CSS, JavaScript (Vanilla) |
+| Backend / Database | [Supabase](https://supabase.com) (PostgreSQL) |
+| Authentication | Supabase Auth |
+| Image Storage | Supabase Storage |
+| Real-time Updates | Supabase Realtime |
+| Hosting | [Netlify](https://netlify.com) |
+| PWA | Service Worker + Manifest |

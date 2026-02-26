@@ -1,12 +1,10 @@
 console.log('app.js loading', new Date().toISOString());
 let menuData = {};
 
-// ═══════════════════════════════════════════════════════
-// FIX 7: Global reference to Supabase client for realtime
-// ═══════════════════════════════════════════════════════
+// Global reference to Supabase client for realtime
 let _supaClient = null;
 
-// Safe localStorage write (no-op in private mode)
+// Safe localStorage write
 function safeSetLocalStorage(key, value) {
     try { localStorage.setItem(key, value); } catch (e) { /* ignore */ }
 }
@@ -118,7 +116,9 @@ function getTranslatedString(item, field) {
 }
 
 function escapeHtml(str) {
-    return String(str || '').replace(/[&<>"']/g, (s) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": "&#39;" })[s]);
+    return String(str || '').replace(/[&<>"']/g, (s) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": "&#39;"
+    })[s]);
 }
 
 function loadLanguage() {
@@ -162,7 +162,9 @@ function renderMenu(items = null) {
                 <details class="ingredients">
                     <summary>${escapeHtml(translations[currentLanguage].ingredients)}</summary>
                     <div class="ingredients-content">
-                        ${ingredientsText ? (`<ul>${ingredientsText.split(',').map(s => `<li>${escapeHtml(s.trim())}</li>`).join('')}</ul>`) : (`<p>${escapeHtml(translations[currentLanguage].notListed)}</p>`)}
+                        ${ingredientsText
+                ? (`<ul>${ingredientsText.split(',').map(s => `<li>${escapeHtml(s.trim())}</li>`).join('')}</ul>`)
+                : (`<p>${escapeHtml(translations[currentLanguage].notListed)}</p>`)}
                     </div>
                 </details>
             </div>
@@ -174,7 +176,11 @@ function renderMenu(items = null) {
     if (!itemsToRender || itemsToRender.length === 0) {
         const no = document.createElement('div');
         no.className = 'no-results';
-        no.textContent = currentLanguage === 'am' ? 'ምንም አይታየም' : currentLanguage === 'om' ? 'Waa hin argamne' : 'No results found';
+        no.textContent = currentLanguage === 'am'
+            ? 'ምንም አይታየም'
+            : currentLanguage === 'om'
+                ? 'Waa hin argamne'
+                : 'No results found';
         menuContainer.appendChild(no);
     }
 }
@@ -233,109 +239,146 @@ searchInput.addEventListener('input', () => {
 });
 
 // ═══════════════════════════════════════════════════════
-// FIX 6: Include `ingredients` in Supabase mapping
-// FIX 7: Store client globally + add realtime subscription
+// SUPABASE MENU LOADING
 // ═══════════════════════════════════════════════════════
 async function tryLoadFromSupabase() {
     try {
-        const url = window.SUPABASE_URL;
-        const key = window.SUPABASE_ANON_KEY;
-        if (!url || !key) return null;
-
-        if (typeof window.supabase === 'undefined' && typeof window.createClient === 'undefined') {
-            await new Promise((resolve, reject) => {
-                const s = document.createElement('script');
-                s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js';
-                s.onload = resolve;
-                s.onerror = reject;
-                document.head.appendChild(s);
-            });
+        var url = window.SUPABASE_URL;
+        var key = window.SUPABASE_ANON_KEY;
+        if (!url || !key) {
+            console.warn('❌ Supabase URL or Key missing');
+            return null;
         }
 
-        const client = window.SUPABASE_CLIENT
-            || ((window.supabase && typeof window.supabase.createClient === 'function')
-                ? window.supabase.createClient(url, key)
-                : (window.createClient ? window.createClient(url, key) : null));
-        if (!client) return null;
+        // Reuse existing client - never create a new one
+        var client = window.SUPABASE_CLIENT || null;
 
-        // FIX 7: Persist client for realtime reuse
-        if (!window.SUPABASE_CLIENT) window.SUPABASE_CLIENT = client;
+        if (!client) {
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                client = window.supabase.createClient(url, key);
+                window.SUPABASE_CLIENT = client;
+                console.log('✅ Created Supabase client in app.js');
+            } else {
+                console.warn('❌ Supabase library not loaded');
+                return null;
+            }
+        }
+
         _supaClient = client;
 
-        const [{ data: categories = [] } = {}, { data: items = [] } = {}] = await Promise.all([
-            client.from('categories').select('id, name'),
-            client.from('menu_items').select('*')
-        ]);
+        console.log('📡 Fetching menu from Supabase...');
 
-        const catMap = {};
-        (categories || []).forEach(c => {
-            const slug = (c.name || '').toString().toLowerCase().trim().replace(/\s+/g, '-');
-            catMap[c.id] = { slug, name: c.name };
+        var catResult = await client.from('categories').select('id, name');
+        var itemResult = await client.from('menu_items').select('*');
+
+        if (catResult.error) {
+            console.error('❌ Categories error:', catResult.error);
+            return null;
+        }
+        if (itemResult.error) {
+            console.error('❌ Menu items error:', itemResult.error);
+            return null;
+        }
+
+        var categories = catResult.data || [];
+        var items = itemResult.data || [];
+
+        console.log('✅ Loaded', categories.length, 'categories,', items.length, 'items');
+
+        var catMap = {};
+        categories.forEach(function (c) {
+            var nameStr = c.name || '';
+            if (typeof nameStr === 'string') {
+                try {
+                    var parsed = JSON.parse(nameStr);
+                    nameStr = parsed.en || parsed.am || nameStr;
+                } catch (e) { }
+            } else if (typeof nameStr === 'object') {
+                nameStr = nameStr.en || nameStr.am || '';
+            }
+            var slug = String(nameStr).toLowerCase().trim().replace(/\s+/g, '-');
+            catMap[c.id] = { slug: slug, name: c.name };
         });
 
-        const grouped = {};
-        (items || []).forEach(row => {
-            const catSlug = (row.category_id && catMap[row.category_id] && catMap[row.category_id].slug) || 'uncategorized';
+        var grouped = {};
+        items.forEach(function (row) {
+            var catSlug = (row.category_id && catMap[row.category_id])
+                ? catMap[row.category_id].slug
+                : 'uncategorized';
+
             if (!grouped[catSlug]) grouped[catSlug] = [];
+
             grouped[catSlug].push({
                 id: row.id,
-                name: row.name || row.title || { en: row.title || '' },
+                name: row.name || { en: '' },
                 price: row.price || 0,
                 image: row.image_url || row.image || '',
-                // ═══ FIX 6: ingredients was NEVER mapped — customer page always showed "Not listed" ═══
                 ingredients: row.ingredients || ''
             });
         });
 
         window.SUPABASE_CATEGORIES = catMap;
+        console.log('✅ Menu grouped into categories:', Object.keys(grouped));
         return grouped;
+
     } catch (e) {
-        console.warn('tryLoadFromSupabase failed', e);
+        console.error('❌ tryLoadFromSupabase failed:', e);
         return null;
     }
 }
 
 async function loadMenuData() {
-    const supa = await tryLoadFromSupabase();
+    // Try Supabase first
+    var supa = await tryLoadFromSupabase();
     if (supa && Object.keys(supa).length > 0) {
         menuData = supa;
         safeSetLocalStorage('menuDataCache', JSON.stringify(supa));
+        console.log('✅ Menu loaded from Supabase');
         return;
     }
 
+    // Fallback: try menu.json
     try {
-        const resp = await fetch('menu.json');
+        var resp = await fetch('menu.json');
         if (resp && resp.ok) {
-            const json = await resp.json();
+            var json = await resp.json();
             menuData = json;
             safeSetLocalStorage('menuDataCache', JSON.stringify(json));
+            console.log('✅ Menu loaded from menu.json');
+            return;
+        }
+    } catch (e) {
+        console.warn('menu.json fetch failed:', e.message);
+    }
+
+    // Fallback: try localStorage cache
+    try {
+        var cached = localStorage.getItem('menuDataCache');
+        if (cached) {
+            menuData = JSON.parse(cached);
+            console.log('✅ Menu loaded from cache');
             return;
         }
     } catch (e) { }
 
-    try {
-        const cached = localStorage.getItem('menuDataCache');
-        if (cached) { menuData = JSON.parse(cached); return; }
-    } catch (e) { }
-
+    console.warn('❌ No menu data available');
     menuData = {};
 }
 
 // ═══════════════════════════════════════════════════════
-// FIX 7: REALTIME for customer page — menu updates appear
-//        instantly without manual refresh
+// REALTIME SUBSCRIPTION
 // ═══════════════════════════════════════════════════════
 let _realtimeStarted = false;
 function startCustomerRealtime() {
     if (_realtimeStarted || !_supaClient) return;
     _realtimeStarted = true;
 
-    console.log('Starting customer realtime subscription');
+    console.log('📡 Starting customer realtime subscription');
     _supaClient.channel('customer-live')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'menu_items' }, () => {
-            console.log('Realtime: menu_items changed — reloading');
-            loadMenuData().then(() => {
-                const query = searchInput.value.trim();
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'menu_items' }, function () {
+            console.log('🔄 Realtime: menu_items changed — reloading');
+            loadMenuData().then(function () {
+                var query = searchInput.value.trim();
                 if (query) {
                     renderMenu(filterItems(query));
                 } else {
@@ -343,10 +386,10 @@ function startCustomerRealtime() {
                 }
             });
         })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
-            console.log('Realtime: categories changed — reloading');
-            loadMenuData().then(() => {
-                const query = searchInput.value.trim();
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, function () {
+            console.log('🔄 Realtime: categories changed — reloading');
+            loadMenuData().then(function () {
+                var query = searchInput.value.trim();
                 if (query) {
                     renderMenu(filterItems(query));
                 } else {
@@ -354,18 +397,18 @@ function startCustomerRealtime() {
                 }
             });
         })
-        .subscribe((status) => {
-            console.log('Customer realtime status:', status);
+        .subscribe(function (status) {
+            console.log('📡 Customer realtime status:', status);
         });
 }
 
-// Listen for live supabase menu updates emitted by `js/menu.js`
-window.addEventListener('supabase-menu-data', (e) => {
+// Listen for live supabase menu updates from menu.js
+window.addEventListener('supabase-menu-data', function (e) {
     try {
         if (e && e.detail) {
-            const incoming = e.detail || {};
-            const merged = Object.assign({}, menuData);
-            Object.keys(incoming).forEach(k => {
+            var incoming = e.detail || {};
+            var merged = Object.assign({}, menuData);
+            Object.keys(incoming).forEach(function (k) {
                 if (Array.isArray(incoming[k]) && incoming[k].length) {
                     merged[k] = incoming[k];
                 } else if (!merged[k]) {
@@ -376,76 +419,86 @@ window.addEventListener('supabase-menu-data', (e) => {
             safeSetLocalStorage('menuDataCache', JSON.stringify(menuData));
             renderMenu();
         }
-    } catch (err) { console.error('supabase-menu-data handler error', err); }
+    } catch (err) {
+        console.error('supabase-menu-data handler error', err);
+    }
 });
 
-// ─── INIT ────────────────────────────────────────────
-loadMenuData().then(() => {
-    const savedLang = localStorage.getItem('language');
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+loadMenuData().then(function () {
+    var savedLang = localStorage.getItem('language');
     if (savedLang && translations[savedLang]) {
         currentLanguage = savedLang;
         languageSelect.value = savedLang;
     }
 
-    const savedCat = localStorage.getItem('lastCategory');
+    var savedCat = localStorage.getItem('lastCategory');
     if (savedCat && menuData[savedCat]) {
         currentCategory = savedCat;
     }
 
-    const savedSearch = localStorage.getItem('lastSearch') || '';
+    var savedSearch = localStorage.getItem('lastSearch') || '';
     searchInput.value = savedSearch;
 
-    categoryBtns.forEach(b => b.classList.remove('active'));
-    const activeBtn = Array.from(categoryBtns).find(b => b.dataset.category === currentCategory);
+    categoryBtns.forEach(function (b) { b.classList.remove('active'); });
+    var activeBtn = Array.from(categoryBtns).find(function (b) {
+        return b.dataset.category === currentCategory;
+    });
     if (activeBtn) activeBtn.classList.add('active');
 
     updateLanguage();
     if (savedSearch) {
-        const filtered = filterItems(savedSearch);
+        var filtered = filterItems(savedSearch);
         renderMenu(filtered);
     } else {
         renderMenu();
     }
 
-    // FIX 7: Start realtime subscription for customers
+    // Start realtime subscription
     startCustomerRealtime();
 
-    // Service worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js').then(reg => {
+    // Service worker (only works on http/https, not file://)
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+        navigator.serviceWorker.register('service-worker.js').then(function (reg) {
             console.log('Service Worker registered.', reg);
             if (reg.update) reg.update();
 
-            let updateBanner = document.getElementById('sw-update-banner');
+            var updateBanner = document.getElementById('sw-update-banner');
             if (!updateBanner) {
                 updateBanner = document.createElement('div');
                 updateBanner.id = 'sw-update-banner';
                 updateBanner.style.cssText = 'position:fixed;bottom:16px;left:16px;right:16px;padding:12px;background:#222;border:1px solid #FFD700;color:#fff;border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:12px;z-index:9999;';
-                updateBanner.innerHTML = `<span>New version available</span><div><button id="sw-reload-btn" style="background:#FFD700;border:none;padding:8px 12px;border-radius:4px;cursor:pointer">Reload</button></div>`;
+                updateBanner.innerHTML = '<span>New version available</span><div><button id="sw-reload-btn" style="background:#FFD700;border:none;padding:8px 12px;border-radius:4px;cursor:pointer">Reload</button></div>';
                 updateBanner.style.display = 'none';
                 document.body.appendChild(updateBanner);
             }
 
             function showUpdatePrompt(waitingWorker) {
                 updateBanner.style.display = 'flex';
-                const btn = document.getElementById('sw-reload-btn');
-                btn.onclick = () => { waitingWorker.postMessage({ type: 'SKIP_WAITING' }); };
+                var btn = document.getElementById('sw-reload-btn');
+                btn.onclick = function () {
+                    waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+                };
             }
 
             if (reg.waiting) showUpdatePrompt(reg.waiting);
 
-            reg.addEventListener('updatefound', () => {
-                const newWorker = reg.installing;
+            reg.addEventListener('updatefound', function () {
+                var newWorker = reg.installing;
                 if (!newWorker) return;
-                newWorker.addEventListener('statechange', () => {
+                newWorker.addEventListener('statechange', function () {
                     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                         showUpdatePrompt(reg.waiting || newWorker);
                     }
                 });
             });
-        }).catch(err => console.warn('Service Worker registration failed:', err));
+        }).catch(function (err) {
+            console.warn('Service Worker registration failed:', err);
+        });
 
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
             if (swRefreshing) return;
             swRefreshing = true;
             window.location.reload();
@@ -456,25 +509,33 @@ loadMenuData().then(() => {
 // Sticky header offsets
 function updateStickyOffsets() {
     try {
-        if (typeof window.setHeaderOffsets === 'function') { window.setHeaderOffsets(); return; }
-        const headerEl = document.querySelector('header');
-        const navEl = document.querySelector('.category-nav');
-        const headerH = headerEl ? Math.ceil(headerEl.getBoundingClientRect().height) : 0;
-        const navH = navEl ? Math.ceil(navEl.getBoundingClientRect().height) : 0;
-        const combined = headerH + navH;
+        if (typeof window.setHeaderOffsets === 'function') {
+            window.setHeaderOffsets();
+            return;
+        }
+        var headerEl = document.querySelector('header');
+        var navEl = document.querySelector('.category-nav');
+        var headerH = headerEl ? Math.ceil(headerEl.getBoundingClientRect().height) : 0;
+        var navH = navEl ? Math.ceil(navEl.getBoundingClientRect().height) : 0;
+        var combined = headerH + navH;
         document.documentElement.style.setProperty('--header-height', headerH + 'px');
         document.documentElement.style.setProperty('--nav-height', navH + 'px');
         document.documentElement.style.setProperty('--combined-header-height', combined + 'px');
     } catch (e) { }
 }
 
-window.addEventListener('load', () => { updateStickyOffsets(); setTimeout(updateStickyOffsets, 250); });
-window.addEventListener('resize', () => updateStickyOffsets());
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => updateStickyOffsets());
+window.addEventListener('load', function () {
+    updateStickyOffsets();
+    setTimeout(updateStickyOffsets, 250);
+});
+window.addEventListener('resize', function () { updateStickyOffsets(); });
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { updateStickyOffsets(); });
+}
 
 try {
-    const obsTarget = document.querySelector('header') || document.body;
-    const mo = new MutationObserver(() => updateStickyOffsets());
+    var obsTarget = document.querySelector('header') || document.body;
+    var mo = new MutationObserver(function () { updateStickyOffsets(); });
     mo.observe(obsTarget, { childList: true, subtree: true, characterData: true });
     try { updateStickyOffsets(); } catch (e) { }
 } catch (e) { }
