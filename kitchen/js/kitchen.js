@@ -12,11 +12,12 @@
     if (!notificationSound) {
       notificationSound = new Audio('sound/soundreality-notification-tone-443095.mp3');
       notificationSound.volume = 0.7;
+      notificationSound.load();
     }
   }
 
   function playNotificationSound() {
-    initSound();
+    if (!soundEnabled || !notificationSound) return;
     notificationSound.currentTime = 0;
     notificationSound.play().catch(err => {
       console.log('🔇 Sound blocked:', err.message);
@@ -62,6 +63,46 @@
   console.log('✅ Supabase ready');
 
   // ═══════════════════════════════════════════════════════
+  // TRANSLATIONS
+  // ═══════════════════════════════════════════════════════
+  const kitchenTranslations = {
+    en: {
+      noOrders: 'No active orders',
+      waiting: 'Waiting for orders...',
+      pending: '⏳ Pending',
+      preparing: '👨‍🍳 Preparing',
+      ready: '✅ Ready',
+      startPreparing: '▶️ Start Preparing',
+      markReady: '✅ Mark Ready',
+      markServed: '🍽️ Mark Served',
+      table: 'Table',
+      justNow: 'Just now',
+      minAgo: 'min ago',
+      minsAgo: 'mins ago',
+      hourAgo: '1 hour ago',
+      hoursAgo: 'hours ago'
+    },
+    am: {
+      noOrders: 'ምንም ትዕዛዝ የለም',
+      waiting: 'ትዕዛዝ በመጠበቅ ላይ...',
+      pending: '⏳ በመጠበቅ ላይ',
+      preparing: '👨‍🍳 በማዘጋጀት ላይ',
+      ready: '✅ ዝግጁ',
+      startPreparing: '▶️ ማዘጋጀት ጀምር',
+      markReady: '✅ ዝግጁ ምልክት አድርግ',
+      markServed: '🍽️ ተቀርቧል ምልክት አድርግ',
+      table: 'ጠረጴዛ',
+      justNow: 'አሁን',
+      minAgo: 'ደቂቃ በፊት',
+      minsAgo: 'ደቂቃዎች በፊት',
+      hourAgo: '1 ሰዓት በፊት',
+      hoursAgo: 'ሰዓቶች በፊት'
+    }
+  };
+
+  let currentLang = 'en';
+
+  // ═══════════════════════════════════════════════════════
   // DOM ELEMENTS
   // ═══════════════════════════════════════════════════════
   const ordersGrid = document.getElementById('ordersGrid');
@@ -69,10 +110,27 @@
   const preparingCount = document.getElementById('preparingCount');
   const readyCount = document.getElementById('readyCount');
   const langBtn = document.getElementById('langBtn');
+  const langToggle = document.getElementById('langToggle');
 
   if (!ordersGrid) {
     console.error('❌ ordersGrid not found');
     return;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  // LANGUAGE SWITCHER
+  // ═══════════════════════════════════════════════════════
+  if (langBtn) {
+    langBtn.addEventListener('click', function () {
+      currentLang = currentLang === 'en' ? 'am' : 'en';
+      if (langToggle) {
+        langToggle.textContent = currentLang === 'en' ? 'አማ' : 'EN';
+      }
+      console.log('🌍 Language switched to', currentLang);
+      renderOrders();
+    });
+  } else {
+    console.warn('⚠️ langBtn not found - check kitchen.html has id="langBtn"');
   }
 
   // ═══════════════════════════════════════════════════════
@@ -94,6 +152,7 @@
                         id,
                         quantity,
                         notes,
+                        special_instructions,
                         menu_items (
                             name,
                             price
@@ -143,12 +202,14 @@
   // RENDER ORDERS
   // ═══════════════════════════════════════════════════════
   function renderOrders() {
+    const lang = kitchenTranslations[currentLang];
+
     if (!orders || orders.length === 0) {
       ordersGrid.innerHTML = `
                 <div class="empty-state">
                     <span class="empty-icon">🍳</span>
-                    <h2>No active orders</h2>
-                    <p>Waiting for orders...</p>
+                    <h2>${lang.noOrders}</h2>
+                    <p>${lang.waiting}</p>
                 </div>
             `;
       return;
@@ -165,10 +226,13 @@
         const menuItem = item.menu_items || {};
         const name = getTranslatedName(menuItem.name);
         const qty = item.quantity || 1;
-        const notes = item.notes ? `
+
+        // ✅ Check both special_instructions and notes
+        const specialNote = item.special_instructions || item.notes || '';
+        const notesHtml = specialNote ? `
                     <div class="order-item-instructions">
-                        <span class="instructions-icon">📝</span>
-                        <span class="instructions-text">${escapeHtml(item.notes)}</span>
+                        <span class="instructions-icon">❌</span>
+                        <span class="instructions-text">${escapeHtml(specialNote)}</span>
                     </div>
                 ` : '';
 
@@ -178,7 +242,7 @@
                             <span class="item-name">${escapeHtml(name)}</span>
                             <span class="item-qty">${qty}x</span>
                         </div>
-                        ${notes}
+                        ${notesHtml}
                     </div>
                 `;
       }).join('');
@@ -187,7 +251,7 @@
                 <div class="order-card ${status}">
                     <div class="order-header">
                         <div class="table-info">
-                            <h3>🪑 Table ${tableNum}</h3>
+                            <h3>🪑 ${lang.table} ${tableNum}</h3>
                             <div class="waiter">👤 ${escapeHtml(waiterName)}</div>
                         </div>
                         <div class="order-meta">
@@ -212,14 +276,15 @@
   // GET ACTION BUTTON
   // ═══════════════════════════════════════════════════════
   function getActionButton(orderId, status) {
+    const lang = kitchenTranslations[currentLang];
     if (status === 'pending') {
-      return `<button class="action-btn preparing-btn" data-action="preparing" data-order-id="${orderId}">▶️ Start Preparing</button>`;
+      return `<button class="action-btn preparing-btn" data-action="preparing" data-order-id="${orderId}">${lang.startPreparing}</button>`;
     }
     if (status === 'preparing') {
-      return `<button class="action-btn ready-btn" data-action="ready" data-order-id="${orderId}">✅ Mark Ready</button>`;
+      return `<button class="action-btn ready-btn" data-action="ready" data-order-id="${orderId}">${lang.markReady}</button>`;
     }
     if (status === 'ready') {
-      return `<button class="action-btn served-btn" data-action="served" data-order-id="${orderId}">🍽️ Mark Served</button>`;
+      return `<button class="action-btn served-btn" data-action="served" data-order-id="${orderId}">${lang.markServed}</button>`;
     }
     return '';
   }
@@ -232,7 +297,7 @@
     if (!btn) return;
 
     const action = btn.dataset.action;
-    const orderId = btn.dataset.orderId; // UUID string - no parseInt!
+    const orderId = btn.dataset.orderId;
 
     console.log('Button clicked:', action, orderId);
 
@@ -269,19 +334,6 @@
   }
 
   // ═══════════════════════════════════════════════════════
-  // LANGUAGE SWITCHER
-  // ═══════════════════════════════════════════════════════
-  if (langBtn) {
-    langBtn.addEventListener('click', function () {
-      const toggle = document.getElementById('langToggle');
-      if (!toggle) return;
-      const current = toggle.textContent.trim();
-      toggle.textContent = current === 'AM' ? 'አማ' : 'AM';
-      console.log('Language switched to', toggle.textContent);
-    });
-  }
-
-  // ═══════════════════════════════════════════════════════
   // HELPERS
   // ═══════════════════════════════════════════════════════
   function escapeHtml(str) {
@@ -296,39 +348,41 @@
     if (typeof nameField === 'string') {
       try {
         const parsed = JSON.parse(nameField);
-        return parsed.en || parsed.am || nameField;
+        return parsed[currentLang] || parsed.en || nameField;
       } catch (e) {
         return nameField;
       }
     }
 
     if (typeof nameField === 'object') {
-      return nameField.en || nameField.am || 'Unknown';
+      return nameField[currentLang] || nameField.en || 'Unknown';
     }
 
     return String(nameField);
   }
 
   function formatStatus(status) {
+    const lang = kitchenTranslations[currentLang];
     const map = {
-      pending: '⏳ Pending',
-      preparing: '👨‍🍳 Preparing',
-      ready: '✅ Ready'
+      pending: lang.pending,
+      preparing: lang.preparing,
+      ready: lang.ready
     };
     return map[status] || status;
   }
 
   function getTimeAgo(timestamp) {
+    const lang = kitchenTranslations[currentLang];
     const now = new Date();
     const then = new Date(timestamp);
     const mins = Math.floor((now - then) / 60000);
 
-    if (mins < 1) return 'Just now';
-    if (mins === 1) return '1 min ago';
-    if (mins < 60) return `${mins} mins ago`;
+    if (mins < 1) return lang.justNow;
+    if (mins === 1) return `1 ${lang.minAgo}`;
+    if (mins < 60) return `${mins} ${lang.minsAgo}`;
 
     const hours = Math.floor(mins / 60);
-    return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+    return hours === 1 ? lang.hourAgo : `${hours} ${lang.hoursAgo}`;
   }
 
   // ═══════════════════════════════════════════════════════
