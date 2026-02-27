@@ -1,24 +1,26 @@
 [build]
   publish = "."
 
-# Short URL redirects
+[[redirects]]
+  from = "/admin"
+  to = "/admin/login.html"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/kitchen"
   to = "/kitchen/kitchen.html"
-  status = 200
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/waiter"
   to = "/kitchen/waiter.html"
-  status = 200
+  status = 301
+  force = true
 
 [[redirects]]
-  from = "/admin"
+  from = "/dashboard"
   to = "/admin/dashboard.html"
-  status = 200
-
-# SPA fallback
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 404
+  status = 301
+  force = true
