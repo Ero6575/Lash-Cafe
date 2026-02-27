@@ -2,9 +2,8 @@
 window.SUPABASE_URL = 'https://uffpgrzoxsbecvgeynxp.supabase.co';
 window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmZnBncnpveHNiZWN2Z2V5bnhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExNDE1NTcsImV4cCI6MjA4NjcxNzU1N30.UFuBmJ9C0xpvHbVndXtSB52R3Ehc1jzzaE068hpMnJA';
 
-
 // Initialize Supabase Client
-const db = null;
+var db = null;
 function initSupabaseClient() {
     if (window.supabase && typeof window.supabase.createClient === 'function') {
         db = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
@@ -17,12 +16,11 @@ function initSupabaseClient() {
 
 // Try to initialize immediately
 if (!initSupabaseClient()) {
-    // If not ready, wait a bit and try again
     setTimeout(initSupabaseClient, 100);
 }
 
 // LANGUAGE TRANSLATIONS
-const LANG = {
+var LANG = {
     en: {
         waiterDashboard: 'Waiter Dashboard',
         kitchenDisplay: 'Kitchen Display',
@@ -96,7 +94,7 @@ const LANG = {
 };
 
 // Current language
-const currentLang = localStorage.getItem('lang') || 'en';
+var currentLang = localStorage.getItem('lang') || 'en';
 
 // Get translation
 function t(key) {
@@ -117,15 +115,15 @@ function formatPrice(price) {
 
 // TIME FORMATTERS
 function timeAgo(timestamp) {
-    const now = new Date();
-    const then = new Date(timestamp);
-    const minutes = Math.floor((now - then) / 60000);
+    var now = new Date();
+    var then = new Date(timestamp);
+    var minutes = Math.floor((now - then) / 60000);
 
     if (minutes < 1) return 'Just now';
     if (minutes === 1) return '1 min ago';
     if (minutes < 60) return minutes + ' mins ago';
 
-    const hours = Math.floor(minutes / 60);
+    var hours = Math.floor(minutes / 60);
     if (hours === 1) return '1 hour ago';
     return hours + ' hours ago';
 }
@@ -134,10 +132,10 @@ function timeAgo(timestamp) {
 function showToast(message, type) {
     type = type || 'success';
 
-    const existingToast = document.querySelector('.toast');
+    var existingToast = document.querySelector('.toast');
     if (existingToast) existingToast.remove();
 
-    const toast = document.createElement('div');
+    var toast = document.createElement('div');
     toast.className = 'toast toast-' + type;
     toast.innerHTML = '<span class="toast-icon">' + (type === 'success' ? '✅' : '❌') + '</span>' +
         '<span class="toast-message">' + message + '</span>';
@@ -159,14 +157,14 @@ function generateTableOptions(selectElement, maxTables) {
     maxTables = maxTables || 30;
     if (!selectElement) return;
     selectElement.innerHTML = '<option value="">' + t('selectTable') + '</option>';
-    for (let i = 1; i <= maxTables; i++) {
+    for (var i = 1; i <= maxTables; i++) {
         selectElement.innerHTML += '<option value="' + i + '">' + t('table') + ' ' + i + '</option>';
     }
 }
 
 // NOTIFICATION SOUND
 function playNotificationSound() {
-    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBzyO1fPTgjMGHm7A7+OZRQ0LPJ3i8bpmHgU8eleP');
+    var audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBzyO1fPTgjMGHm7A7+OZRQ0LPJ3i8bpmHgU8eleP');
     audio.play().catch(function (e) { });
 }
 
