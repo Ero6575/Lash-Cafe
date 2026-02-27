@@ -1,9 +1,9 @@
 // STATE MANAGEMENT
-const cart = [];
-const menuItems = [];
-const categories = [];
-const currentCategory = 'all';
-const searchQuery = '';
+let cart = [];
+let menuItems = [];
+let categories = [];
+let currentCategory = 'all';
+let searchQuery = '';
 
 // INITIALIZATION
 document.addEventListener('DOMContentLoaded', function () {
@@ -11,31 +11,22 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function initApp() {
-    // Check if db is ready(connection guard)
     if (!db) {
         console.error('❌ Database not ready!');
         showToast('Connection error. Please refresh.', 'error');
         return;
     }
 
-    // Apply translations
     applyTranslations();
 
-    // Generate table options (30 tables default)
     const tableSelect = document.getElementById('tableNumber');
     generateTableOptions(tableSelect, 30);
 
-    // Load data
     loadCategories();
     loadMenuItems();
-
-    // Set up event listeners
     setupEventListeners();
-
-    // Create ingredients modal
     createIngredientsModal();
 
-    // Load saved waiter name
     const savedName = localStorage.getItem('waiterName');
     if (savedName) {
         document.getElementById('waiterName').value = savedName;
@@ -43,6 +34,7 @@ function initApp() {
 
     console.log('✅ Waiter App Initialized');
 }
+
 // CART TOGGLE
 function toggleCart() {
     const cartSection = document.getElementById('cartSection');
@@ -51,44 +43,38 @@ function toggleCart() {
 
 // TRANSLATIONS
 function applyTranslations() {
-    // Update language toggle button
     document.getElementById('langToggle').textContent = currentLang === 'en' ? 'አማ' : 'EN';
 
-    // Translate all elements with data-translate
     document.querySelectorAll('[data-translate]').forEach(function (el) {
         const key = el.getAttribute('data-translate');
         el.textContent = t(key);
     });
 
-    // Translate placeholders
     document.querySelectorAll('[data-placeholder]').forEach(function (el) {
         const key = el.getAttribute('data-placeholder');
         el.placeholder = t(key);
     });
 }
+
 // EVENT LISTENERS
 function setupEventListeners() {
-    // Search input
     document.getElementById('searchMenu').addEventListener('input', function (e) {
         searchQuery = e.target.value.toLowerCase();
         renderMenuItems();
     });
 
-    // Save waiter name
     document.getElementById('waiterName').addEventListener('change', function (e) {
         localStorage.setItem('waiterName', e.target.value);
     });
 
-    // Submit order
     document.getElementById('submitOrder').addEventListener('click', submitOrder);
 }
 
 // HELPER: Get Localized Text
 function getLocalizedText(field) {
     if (!field) return '';
-    // If it's already a string (not JSON), return as is
+
     if (typeof field === 'string') {
-        // Check if it's a JSON string
         if (field.startsWith('{') && field.includes('"en"')) {
             try {
                 const parsed = JSON.parse(field);
@@ -100,7 +86,6 @@ function getLocalizedText(field) {
         return field;
     }
 
-    // If it's an object, get the correct language
     if (typeof field === 'object') {
         return field[currentLang] || field['en'] || '';
     }
@@ -113,10 +98,8 @@ function parseIngredients(ingredientsField) {
     const text = getLocalizedText(ingredientsField);
     if (!text || text === '') return [];
 
-    // Split by comma, newline, or bullet points
     const ingredients = text.split(/[,\n•·]/);
 
-    // Clean up each ingredient
     return ingredients
         .map(function (ing) {
             return ing.trim();
@@ -132,23 +115,19 @@ function getImageUrl(imageUrl) {
         return 'https://via.placeholder.com/150x150?text=No+Image';
     }
 
-    // If it's already a full URL (http/https), return as is
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
         return imageUrl;
     }
 
-    // If it already has ../ prefix, return as is
     if (imageUrl.startsWith('../')) {
         return imageUrl;
     }
 
-    // Add ../ prefix for paths like "images/breakfast/file.jpg"
     return '../' + imageUrl;
 }
 
 // INGREDIENTS MODAL
 function createIngredientsModal() {
-    // Check if modal already exists
     if (document.getElementById('ingredientsModal')) return;
 
     const modalHTML = '<div id="ingredientsModal" class="ing-modal">' +
@@ -173,8 +152,7 @@ function createIngredientsModal() {
         '</div>' +
         '</div>';
 
-    // Add modal styles
-    var modalStyles = '<style>' +
+    const modalStyles = '<style>' +
         '.ing-modal {' +
         '  display: none;' +
         '  position: fixed;' +
@@ -378,11 +356,10 @@ function createIngredientsModal() {
 }
 
 // Current item being viewed
-const currentModalItem = null;
-const excludedIngredients = [];
+let currentModalItem = null;
+let excludedIngredients = [];
 
 function showIngredients(itemId, event) {
-    // Stop the click from adding to cart
     if (event) event.stopPropagation();
 
     const item = menuItems.find(function (m) {
@@ -399,20 +376,17 @@ function showIngredients(itemId, event) {
     const imageUrl = getImageUrl(item.image_url);
     const ingredients = parseIngredients(item.ingredients);
 
-    // Update modal content
     document.getElementById('ingModalImage').src = imageUrl;
     document.getElementById('ingModalImage').alt = itemName;
     document.getElementById('ingModalTitle').textContent = itemName;
     document.getElementById('ingModalPrice').textContent = itemPrice;
 
-    // Update labels based on language
     document.getElementById('ingModalLabel').textContent = currentLang === 'am' ? 'ንጥረ ነገሮች' : 'Ingredients';
     document.getElementById('ingModalSubtitle').textContent = currentLang === 'am'
         ? 'ደንበኛው የማይፈልጋቸውን ያስወግዱ'
         : 'Uncheck items customer doesn\'t want';
     document.getElementById('ingAddBtn').textContent = currentLang === 'am' ? 'ወደ ትዕዛዝ ጨምር' : 'Add to Order';
 
-    // Render ingredients list
     const listContainer = document.getElementById('ingModalList');
 
     if (ingredients.length === 0) {
@@ -420,7 +394,7 @@ function showIngredients(itemId, event) {
             (currentLang === 'am' ? 'ምንም ንጥረ ነገሮች አልተመዘገቡም' : 'No ingredients listed') +
             '</div>';
     } else {
-        var html = '';
+        let html = '';
         ingredients.forEach(function (ing, index) {
             html += '<div class="ing-item" data-index="' + index + '" data-ingredient="' + ing + '" onclick="toggleIngredient(this)">' +
                 '<div class="ing-checkbox"></div>' +
@@ -437,13 +411,11 @@ function toggleIngredient(element) {
     const ingredient = element.getAttribute('data-ingredient');
 
     if (element.classList.contains('excluded')) {
-        // Include it back
         element.classList.remove('excluded');
         excludedIngredients = excludedIngredients.filter(function (ing) {
             return ing !== ingredient;
         });
     } else {
-        // Exclude it
         element.classList.add('excluded');
         excludedIngredients.push(ingredient);
     }
@@ -466,14 +438,13 @@ function addToCartFromModal() {
             price: item.price,
             image_url: item.image_url,
             quantity: 1,
-            excludedIngredients: excludedIngredients.slice() // Copy the array
+            excludedIngredients: excludedIngredients.slice()
         });
     }
 
     renderCart();
     closeIngredientsModal();
 
-    // Expand cart on mobile
     const cartSection = document.getElementById('cartSection');
     if (!cartSection.classList.contains('expanded')) {
         cartSection.classList.add('expanded');
@@ -485,7 +456,6 @@ function addToCartFromModal() {
         : itemName + ' ' + (currentLang === 'am' ? 'ተጨምሯል' : 'added');
     showToast(message, 'success');
 
-    // Haptic feedback (mobile)
     if (navigator.vibrate) {
         navigator.vibrate(50);
     }
@@ -497,7 +467,6 @@ function closeIngredientsModal() {
     excludedIngredients = [];
 }
 
-// Close modal when clicking outside
 document.addEventListener('click', function (e) {
     const modal = document.getElementById('ingredientsModal');
     if (modal && e.target === modal) {
@@ -524,14 +493,12 @@ function loadCategories() {
 function renderCategories() {
     const container = document.getElementById('categories');
 
-    const html = '<button class="category-btn active" data-category="all" onclick="filterCategory(\'all\', this)">' +
+    let html = '<button class="category-btn active" data-category="all" onclick="filterCategory(\'all\', this)">' +
         t('allCategories') + '</button>';
 
     categories.forEach(function (cat) {
-        // Get localized category name
-        const catName = getLocalizedText(cat.name);
+        let catName = getLocalizedText(cat.name);
 
-        // If name is still an object or JSON, try to extract
         if (typeof catName === 'object') {
             catName = catName[currentLang] || catName['en'] || catName.en || JSON.stringify(catName);
         }
@@ -546,7 +513,6 @@ function renderCategories() {
 function filterCategory(categoryId, btn) {
     currentCategory = categoryId;
 
-    // Update active button
     document.querySelectorAll('.category-btn').forEach(function (b) {
         b.classList.remove('active');
     });
@@ -574,26 +540,22 @@ function loadMenuItems() {
 function renderMenuItems() {
     const container = document.getElementById('menuGrid');
 
-    // Filter items
-    const filtered = menuItems;
+    let filtered = menuItems;
 
-    // By category
     if (currentCategory !== 'all') {
         filtered = filtered.filter(function (item) {
             return item.category_id === currentCategory;
         });
     }
 
-    // By search
     if (searchQuery) {
         filtered = filtered.filter(function (item) {
-            var itemName = getLocalizedText(item.name).toLowerCase();
-            var itemIngredients = getLocalizedText(item.ingredients).toLowerCase();
+            const itemName = getLocalizedText(item.name).toLowerCase();
+            const itemIngredients = getLocalizedText(item.ingredients).toLowerCase();
             return itemName.includes(searchQuery) || itemIngredients.includes(searchQuery);
         });
     }
 
-    // Render
     if (filtered.length === 0) {
         container.innerHTML = '<div class="loading">' + (currentLang === 'am' ? 'ምንም አልተገኘም' : 'No items found') + '</div>';
         return;
@@ -601,7 +563,7 @@ function renderMenuItems() {
 
     const ingredientsLabel = currentLang === 'am' ? 'ንጥረ ነገሮች' : 'Ingredients';
 
-    const html = '';
+    let html = '';
     filtered.forEach(function (item) {
         const imageUrl = getImageUrl(item.image_url);
         const itemName = getLocalizedText(item.name);
@@ -628,10 +590,8 @@ function renderMenuItems() {
     container.innerHTML = html;
 }
 
-
 // CART MANAGEMENT
 function addToCart(itemId) {
-    // Now redirects to show ingredients modal
     showIngredients(itemId, null);
 }
 
@@ -659,13 +619,11 @@ function renderCart() {
     const totalEl = document.getElementById('cartTotal');
     const submitBtn = document.getElementById('submitOrder');
 
-    // Update count
     const totalItems = cart.reduce(function (sum, item) {
         return sum + item.quantity;
     }, 0);
     countEl.textContent = totalItems;
 
-    // Empty cart
     if (cart.length === 0) {
         container.innerHTML = '<div class="empty-cart">' + t('emptyCart') + '</div>';
         totalEl.textContent = '0 Birr';
@@ -673,8 +631,7 @@ function renderCart() {
         return;
     }
 
-    // Render items
-    const html = '';
+    let html = '';
     cart.forEach(function (item, index) {
         const itemName = getLocalizedText(item.name);
         const itemPrice = parseFloat(item.price).toFixed(0) + ' Birr';
@@ -685,7 +642,6 @@ function renderCart() {
             '<h4>' + itemName + '</h4>' +
             '<p>' + itemPrice + ' × ' + item.quantity + '</p>';
 
-        // Show excluded ingredients
         if (hasExclusions) {
             html += '<p class="excluded-info">' +
                 (currentLang === 'am' ? '❌ ያለ: ' : '❌ Without: ') +
@@ -704,13 +660,11 @@ function renderCart() {
 
     container.innerHTML = html;
 
-    // Update total
     const total = cart.reduce(function (sum, item) {
         return sum + (item.price * item.quantity);
     }, 0);
     totalEl.textContent = parseFloat(total).toFixed(0) + ' Birr';
 
-    // Enable submit
     submitBtn.disabled = false;
 }
 
@@ -719,7 +673,6 @@ function submitOrder() {
     const tableNumber = document.getElementById('tableNumber').value;
     const waiterName = document.getElementById('waiterName').value.trim();
 
-    // Validation
     if (!tableNumber) {
         showToast(currentLang === 'am' ? 'ጠረጴዛ ይምረጡ' : 'Please select a table', 'error');
         return;
@@ -735,17 +688,14 @@ function submitOrder() {
         return;
     }
 
-    // Disable button
     const submitBtn = document.getElementById('submitOrder');
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span>' + (currentLang === 'am' ? 'በመላክ ላይ...' : 'Sending...') + '</span>';
 
-    // Calculate total
     const total = cart.reduce(function (sum, item) {
         return sum + (item.price * item.quantity);
     }, 0);
 
-    // Create order
     db.from('orders')
         .insert({
             table_number: parseInt(tableNumber),
@@ -765,7 +715,6 @@ function submitOrder() {
 
             const order = response.data;
 
-            // Create order items with excluded ingredients as special instructions
             const orderItems = cart.map(function (item) {
                 let specialInstructions = '';
                 if (item.excludedIngredients && item.excludedIngredients.length > 0) {
@@ -792,14 +741,11 @@ function submitOrder() {
                         return;
                     }
 
-                    // Success!
                     showToast(t('orderSuccess') + ' - ' + t('table') + ' ' + tableNumber, 'success');
 
-                    // Clear cart
                     cart = [];
                     renderCart();
 
-                    // Reset table selection
                     document.getElementById('tableNumber').value = '';
 
                     resetSubmitButton();

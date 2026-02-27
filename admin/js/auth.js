@@ -3,7 +3,7 @@
     const signinMsg = document.getElementById('signin-msg');
     const signupMsg = document.getElementById('signup-msg');
     const authPage = document.getElementById('auth-page');
-    const redirecting = false;
+    let redirecting = false;
 
     function revealPage() {
         if (authPage) authPage.classList.add('ready');
@@ -24,7 +24,7 @@
     if (signupMsg) signupMsg.textContent = '';
 
     // Wait for Supabase to load
-    const attempts = 0;
+    let attempts = 0;
     while (!window.supabase && attempts < 50) {
         await new Promise(function (r) { setTimeout(r, 100); });
         attempts++;
@@ -40,7 +40,7 @@
     console.log('✅ Supabase loaded');
 
     // Create Supabase client
-    const supabase = window.SUPABASE_CLIENT;
+    let supabase = window.SUPABASE_CLIENT;
     if (!supabase) {
         supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
         window.SUPABASE_CLIENT = supabase;
@@ -100,7 +100,7 @@
 
         console.log('Creating/updating owner for user:', user.id);
 
-        const retries = 3;
+        let retries = 3;
         while (retries > 0) {
             try {
                 const checkResult = await supabase
@@ -147,7 +147,7 @@
     }
 
     // SIGN IN
-    const signinBusy = false;
+    let signinBusy = false;
     signinForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         if (signinBusy || redirecting) return;
@@ -188,7 +188,6 @@
                 console.log('✅ Sign in successful');
                 showSigninMsg('Signed in! Setting up...');
 
-                // Ensure owner exists
                 const ownerCreated = await ensureOwner(result.data.user);
 
                 if (!ownerCreated) {
@@ -197,7 +196,6 @@
 
                 showSigninMsg('Success! Redirecting...');
 
-                // Small delay to ensure everything is ready
                 await new Promise(r => setTimeout(r, 500));
 
                 redirecting = true;
@@ -222,7 +220,7 @@
     });
 
     // SIGN UP
-    const signupBusy = false;
+    let signupBusy = false;
     signupForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         if (signupBusy || redirecting) return;
@@ -260,7 +258,7 @@
         console.log('Attempting sign up for:', email);
 
         try {
-            var result = await supabase.auth.signUp({
+            const result = await supabase.auth.signUp({
                 email: email,
                 password: password
             });

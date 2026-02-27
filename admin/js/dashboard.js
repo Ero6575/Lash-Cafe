@@ -1,9 +1,9 @@
 // dashboard.js — FIXED VERSION (no flickering)
 (async function () {
-    const redirecting = false;
+    let redirecting = false;
 
     // Wait for Supabase to load
-    const attempts = 0;
+    let attempts = 0;
     while (!window.supabase && attempts < 30) {
         await new Promise(function (r) { setTimeout(r, 100); });
         attempts++;
@@ -16,16 +16,16 @@
     }
 
     // Create Supabase client
-    const supabase = window.SUPABASE_CLIENT;
+    let supabase = window.SUPABASE_CLIENT;
     if (!supabase) {
         supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
         window.SUPABASE_CLIENT = supabase;
     }
 
     // Check session
-    const session = null;
+    let session = null;
     try {
-        var result = await supabase.auth.getSession();
+        const result = await supabase.auth.getSession();
         session = result.data && result.data.session;
     } catch (e) {
         console.error('Session error:', e);
@@ -42,7 +42,6 @@
         const ownerCheck = await supabase.from('owners').select('*').eq('user_id', userId).single();
 
         if (ownerCheck.error || !ownerCheck.data) {
-            // Create owner if not exists
             await supabase.from('owners').upsert(
                 [{ user_id: userId, email: session.user.email, is_active: true }],
                 { onConflict: 'user_id' }
@@ -107,15 +106,14 @@
     if (signoutBtn) signoutBtn.addEventListener('click', handleSignOut);
     if (signoutTop) signoutTop.addEventListener('click', handleSignOut);
 
-
     // STATE
-    const categoriesCache = [];
-    const itemsCache = [];
-    const editingId = null;
-    const editingImageUrl = null;
-    const toDelete = null;
-    const currentView = 'category-cards';
-    const selectedCategoryId = null;
+    let categoriesCache = [];
+    let itemsCache = [];
+    let editingId = null;
+    let editingImageUrl = null;
+    let toDelete = null;
+    let currentView = 'category-cards';
+    let selectedCategoryId = null;
 
     // HELPER FUNCTIONS
     function escapeHtml(s) {
@@ -130,10 +128,10 @@
             return field[lang] || field['en'] || Object.values(field)[0] || '';
         }
         if (typeof field === 'string') {
-            var trimmed = field.trim();
+            const trimmed = field.trim();
             if (trimmed.charAt(0) === '{') {
                 try {
-                    var parsed = JSON.parse(trimmed);
+                    const parsed = JSON.parse(trimmed);
                     return parsed[lang] || parsed['en'] || trimmed;
                 } catch (e) {
                     return trimmed;
@@ -148,7 +146,7 @@
         if (!field) return {};
         if (typeof field === 'object' && field !== null) return field;
         if (typeof field === 'string') {
-            var t = field.trim();
+            const t = field.trim();
             if (t.charAt(0) === '{') {
                 try { return JSON.parse(t); } catch (e) { return { en: t }; }
             }
@@ -175,7 +173,7 @@
             if (itemCategory) {
                 itemCategory.innerHTML = '<option value="">— Select category —</option>' +
                     categoriesCache.map(function (c) {
-                        var name = getCategoryDisplayName(c);
+                        const name = getCategoryDisplayName(c);
                         return '<option value="' + c.id + '">' + escapeHtml(name) + '</option>';
                     }).join('');
             }
@@ -269,7 +267,7 @@
             const el = document.createElement('article');
             el.className = 'card-item';
             const name = extractLang(item.name, 'en');
-            const imgSrc = item.image_url || '';
+            let imgSrc = item.image_url || '';
             if (imgSrc && !/^(https?:|data:|\/)/i.test(imgSrc)) {
                 imgSrc = '../' + imgSrc;
             }
@@ -380,8 +378,8 @@
             }
             if (itemModalTitle) itemModalTitle.textContent = 'Edit Item';
 
-            var name = safeParse(item.name);
-            var ing = safeParse(item.ingredients);
+            const name = safeParse(item.name);
+            const ing = safeParse(item.ingredients);
             if (itemNameEn) itemNameEn.value = name.en || '';
             if (itemNameAm) itemNameAm.value = name.am || '';
             if (itemNameOm) itemNameOm.value = name.om || '';
@@ -392,7 +390,7 @@
             if (itemCategory) itemCategory.value = item.category_id || '';
 
             if (item.image_url && itemImagePreview && itemImagePreviewWrap) {
-                var src = item.image_url;
+                let src = item.image_url;
                 if (!/^(https?:|data:|\/)/i.test(src)) src = '../' + src;
                 itemImagePreview.src = src;
                 itemImagePreviewWrap.style.display = 'block';
@@ -557,13 +555,13 @@
     // SEARCH
     if (globalSearch) {
         globalSearch.addEventListener('input', function (e) {
-            var q = e.target.value.toLowerCase().trim();
+            const q = e.target.value.toLowerCase().trim();
             if (!q) {
                 currentView = 'category-cards';
                 renderCurrentView();
                 return;
             }
-            var filtered = itemsCache.filter(function (i) {
+            const filtered = itemsCache.filter(function (i) {
                 return extractLang(i.name, 'en').toLowerCase().includes(q);
             });
             currentView = 'category-items';
