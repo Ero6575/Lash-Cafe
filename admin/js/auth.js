@@ -1,9 +1,9 @@
 // admin/js/auth.js — FIXED VERSION with better error handling
 (async function () {
-    var signinMsg = document.getElementById('signin-msg');
-    var signupMsg = document.getElementById('signup-msg');
-    var authPage = document.getElementById('auth-page');
-    var redirecting = false;
+    const signinMsg = document.getElementById('signin-msg');
+    const signupMsg = document.getElementById('signup-msg');
+    const authPage = document.getElementById('auth-page');
+    const redirecting = false;
 
     function revealPage() {
         if (authPage) authPage.classList.add('ready');
@@ -24,7 +24,7 @@
     if (signupMsg) signupMsg.textContent = '';
 
     // Wait for Supabase to load
-    var attempts = 0;
+    const attempts = 0;
     while (!window.supabase && attempts < 50) {
         await new Promise(function (r) { setTimeout(r, 100); });
         attempts++;
@@ -40,7 +40,7 @@
     console.log('✅ Supabase loaded');
 
     // Create Supabase client
-    var supabase = window.SUPABASE_CLIENT;
+    const supabase = window.SUPABASE_CLIENT;
     if (!supabase) {
         supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
         window.SUPABASE_CLIENT = supabase;
@@ -50,7 +50,7 @@
 
     // Check if already logged in
     try {
-        var result = await supabase.auth.getSession();
+        const result = await supabase.auth.getSession();
         if (result.data && result.data.session && !redirecting) {
             console.log('✅ Already logged in, redirecting...');
             redirecting = true;
@@ -65,10 +65,10 @@
     revealPage();
 
     // Get form elements
-    var signinForm = document.getElementById('signin-form');
-    var signupForm = document.getElementById('signup-form');
-    var showSignup = document.getElementById('show-signup');
-    var showSignin = document.getElementById('show-signin');
+    const signinForm = document.getElementById('signin-form');
+    const signupForm = document.getElementById('signup-form');
+    const showSignup = document.getElementById('show-signup');
+    const showSignin = document.getElementById('show-signin');
 
     // Toggle between signin and signup forms
     if (showSignup) {
@@ -100,10 +100,10 @@
 
         console.log('Creating/updating owner for user:', user.id);
 
-        var retries = 3;
+        const retries = 3;
         while (retries > 0) {
             try {
-                var checkResult = await supabase
+                const checkResult = await supabase
                     .from('owners')
                     .select('*')
                     .eq('user_id', user.id)
@@ -115,7 +115,7 @@
                 }
 
                 // Create new owner
-                var insertResult = await supabase
+                const insertResult = await supabase
                     .from('owners')
                     .insert([{
                         user_id: user.id,
@@ -147,21 +147,21 @@
     }
 
     // SIGN IN
-    var signinBusy = false;
+    const signinBusy = false;
     signinForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         if (signinBusy || redirecting) return;
         signinBusy = true;
 
-        var btn = document.getElementById('signin-btn');
-        var originalText = btn ? btn.textContent : 'Sign In';
+        const btn = document.getElementById('signin-btn');
+        const originalText = btn ? btn.textContent : 'Sign In';
         if (btn) {
             btn.disabled = true;
             btn.textContent = 'Signing in...';
         }
 
-        var email = document.getElementById('signin-email').value.trim();
-        var password = document.getElementById('signin-password').value;
+        const email = document.getElementById('signin-email').value.trim();
+        const password = document.getElementById('signin-password').value;
 
         if (!email || !password) {
             showSigninMsg('Email and password required');
@@ -172,7 +172,7 @@
         console.log('Attempting sign in for:', email);
 
         try {
-            var result = await supabase.auth.signInWithPassword({
+            const result = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password
             });
@@ -189,7 +189,7 @@
                 showSigninMsg('Signed in! Setting up...');
 
                 // Ensure owner exists
-                var ownerCreated = await ensureOwner(result.data.user);
+                const ownerCreated = await ensureOwner(result.data.user);
 
                 if (!ownerCreated) {
                     showSigninMsg('Warning: Owner setup incomplete, but proceeding...');
@@ -222,22 +222,22 @@
     });
 
     // SIGN UP
-    var signupBusy = false;
+    const signupBusy = false;
     signupForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         if (signupBusy || redirecting) return;
         signupBusy = true;
 
-        var btn = document.getElementById('signup-btn');
-        var originalText = btn ? btn.textContent : 'Sign Up';
+        const btn = document.getElementById('signup-btn');
+        const originalText = btn ? btn.textContent : 'Sign Up';
         if (btn) {
             btn.disabled = true;
             btn.textContent = 'Creating account...';
         }
 
-        var email = document.getElementById('signup-email').value.trim();
-        var password = document.getElementById('signup-password').value;
-        var confirm = document.getElementById('signup-password-confirm').value;
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value;
+        const confirm = document.getElementById('signup-password-confirm').value;
 
         if (!email) {
             showSignupMsg('Email required');

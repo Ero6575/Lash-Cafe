@@ -46,7 +46,7 @@ window.addMenuItemSimple = async function () {
 
     // If file chosen, upload to storage and override image_url
     try {
-            if (fileInput && fileInput.files && fileInput.files[0]) {
+        if (fileInput && fileInput.files && fileInput.files[0]) {
             const file = fileInput.files[0];
             const filePath = `menu-images/${Date.now()}-${file.name.replace(/[^a-z0-9.-]/ig, '_')}`;
             const { error: upErr } = await supabase.storage.from('menu-images').upload(filePath, file, { upsert: true });

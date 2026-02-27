@@ -1,21 +1,17 @@
-// ================================
 // STATE MANAGEMENT
-// ================================
-var cart = [];
-var menuItems = [];
-var categories = [];
-var currentCategory = 'all';
-var searchQuery = '';
+const cart = [];
+const menuItems = [];
+const categories = [];
+const currentCategory = 'all';
+const searchQuery = '';
 
-// ================================
 // INITIALIZATION
-// ================================
 document.addEventListener('DOMContentLoaded', function () {
     initApp();
 });
 
 function initApp() {
-    // Check if db is ready
+    // Check if db is ready(connection guard)
     if (!db) {
         console.error('❌ Database not ready!');
         showToast('Connection error. Please refresh.', 'error');
@@ -26,7 +22,7 @@ function initApp() {
     applyTranslations();
 
     // Generate table options (30 tables default)
-    var tableSelect = document.getElementById('tableNumber');
+    const tableSelect = document.getElementById('tableNumber');
     generateTableOptions(tableSelect, 30);
 
     // Load data
@@ -40,45 +36,37 @@ function initApp() {
     createIngredientsModal();
 
     // Load saved waiter name
-    var savedName = localStorage.getItem('waiterName');
+    const savedName = localStorage.getItem('waiterName');
     if (savedName) {
         document.getElementById('waiterName').value = savedName;
     }
 
     console.log('✅ Waiter App Initialized');
 }
-
-// ================================
 // CART TOGGLE
-// ================================
 function toggleCart() {
-    var cartSection = document.getElementById('cartSection');
+    const cartSection = document.getElementById('cartSection');
     cartSection.classList.toggle('expanded');
 }
 
-// ================================
 // TRANSLATIONS
-// ================================
 function applyTranslations() {
     // Update language toggle button
     document.getElementById('langToggle').textContent = currentLang === 'en' ? 'አማ' : 'EN';
 
     // Translate all elements with data-translate
     document.querySelectorAll('[data-translate]').forEach(function (el) {
-        var key = el.getAttribute('data-translate');
+        const key = el.getAttribute('data-translate');
         el.textContent = t(key);
     });
 
     // Translate placeholders
     document.querySelectorAll('[data-placeholder]').forEach(function (el) {
-        var key = el.getAttribute('data-placeholder');
+        const key = el.getAttribute('data-placeholder');
         el.placeholder = t(key);
     });
 }
-
-// ================================
 // EVENT LISTENERS
-// ================================
 function setupEventListeners() {
     // Search input
     document.getElementById('searchMenu').addEventListener('input', function (e) {
@@ -95,18 +83,15 @@ function setupEventListeners() {
     document.getElementById('submitOrder').addEventListener('click', submitOrder);
 }
 
-// ================================
 // HELPER: Get Localized Text
-// ================================
 function getLocalizedText(field) {
     if (!field) return '';
-
     // If it's already a string (not JSON), return as is
     if (typeof field === 'string') {
         // Check if it's a JSON string
         if (field.startsWith('{') && field.includes('"en"')) {
             try {
-                var parsed = JSON.parse(field);
+                const parsed = JSON.parse(field);
                 return parsed[currentLang] || parsed['en'] || field;
             } catch (e) {
                 return field;
@@ -123,15 +108,13 @@ function getLocalizedText(field) {
     return String(field);
 }
 
-// ================================
 // HELPER: Parse Ingredients to Array
-// ================================
 function parseIngredients(ingredientsField) {
-    var text = getLocalizedText(ingredientsField);
+    const text = getLocalizedText(ingredientsField);
     if (!text || text === '') return [];
 
     // Split by comma, newline, or bullet points
-    var ingredients = text.split(/[,\n•·]/);
+    const ingredients = text.split(/[,\n•·]/);
 
     // Clean up each ingredient
     return ingredients
@@ -143,9 +126,7 @@ function parseIngredients(ingredientsField) {
         });
 }
 
-// ================================
 // HELPER: Fix Image Path
-// ================================
 function getImageUrl(imageUrl) {
     if (!imageUrl || imageUrl === '') {
         return 'https://via.placeholder.com/150x150?text=No+Image';
@@ -165,14 +146,12 @@ function getImageUrl(imageUrl) {
     return '../' + imageUrl;
 }
 
-// ================================
 // INGREDIENTS MODAL
-// ================================
 function createIngredientsModal() {
     // Check if modal already exists
     if (document.getElementById('ingredientsModal')) return;
 
-    var modalHTML = '<div id="ingredientsModal" class="ing-modal">' +
+    const modalHTML = '<div id="ingredientsModal" class="ing-modal">' +
         '<div class="ing-modal-content">' +
         '<div class="ing-modal-header">' +
         '<button class="ing-modal-close" onclick="closeIngredientsModal()">×</button>' +
@@ -399,14 +378,14 @@ function createIngredientsModal() {
 }
 
 // Current item being viewed
-var currentModalItem = null;
-var excludedIngredients = [];
+const currentModalItem = null;
+const excludedIngredients = [];
 
 function showIngredients(itemId, event) {
     // Stop the click from adding to cart
     if (event) event.stopPropagation();
 
-    var item = menuItems.find(function (m) {
+    const item = menuItems.find(function (m) {
         return m.id === itemId;
     });
 
@@ -415,10 +394,10 @@ function showIngredients(itemId, event) {
     currentModalItem = item;
     excludedIngredients = [];
 
-    var itemName = getLocalizedText(item.name);
-    var itemPrice = parseFloat(item.price).toFixed(0) + ' Birr';
-    var imageUrl = getImageUrl(item.image_url);
-    var ingredients = parseIngredients(item.ingredients);
+    const itemName = getLocalizedText(item.name);
+    const itemPrice = parseFloat(item.price).toFixed(0) + ' Birr';
+    const imageUrl = getImageUrl(item.image_url);
+    const ingredients = parseIngredients(item.ingredients);
 
     // Update modal content
     document.getElementById('ingModalImage').src = imageUrl;
@@ -434,7 +413,7 @@ function showIngredients(itemId, event) {
     document.getElementById('ingAddBtn').textContent = currentLang === 'am' ? 'ወደ ትዕዛዝ ጨምር' : 'Add to Order';
 
     // Render ingredients list
-    var listContainer = document.getElementById('ingModalList');
+    const listContainer = document.getElementById('ingModalList');
 
     if (ingredients.length === 0) {
         listContainer.innerHTML = '<div class="ing-no-ingredients">' +
@@ -455,7 +434,7 @@ function showIngredients(itemId, event) {
 }
 
 function toggleIngredient(element) {
-    var ingredient = element.getAttribute('data-ingredient');
+    const ingredient = element.getAttribute('data-ingredient');
 
     if (element.classList.contains('excluded')) {
         // Include it back
@@ -473,8 +452,8 @@ function toggleIngredient(element) {
 function addToCartFromModal() {
     if (!currentModalItem) return;
 
-    var item = currentModalItem;
-    var existing = cart.find(function (c) {
+    const item = currentModalItem;
+    const existing = cart.find(function (c) {
         return c.id === item.id && JSON.stringify(c.excludedIngredients || []) === JSON.stringify(excludedIngredients);
     });
 
@@ -495,13 +474,13 @@ function addToCartFromModal() {
     closeIngredientsModal();
 
     // Expand cart on mobile
-    var cartSection = document.getElementById('cartSection');
+    const cartSection = document.getElementById('cartSection');
     if (!cartSection.classList.contains('expanded')) {
         cartSection.classList.add('expanded');
     }
 
-    var itemName = getLocalizedText(item.name);
-    var message = excludedIngredients.length > 0
+    const itemName = getLocalizedText(item.name);
+    const message = excludedIngredients.length > 0
         ? itemName + ' ' + (currentLang === 'am' ? 'ተጨምሯል (ማስተካከያ አለው)' : 'added (modified)')
         : itemName + ' ' + (currentLang === 'am' ? 'ተጨምሯል' : 'added');
     showToast(message, 'success');
@@ -520,15 +499,13 @@ function closeIngredientsModal() {
 
 // Close modal when clicking outside
 document.addEventListener('click', function (e) {
-    var modal = document.getElementById('ingredientsModal');
+    const modal = document.getElementById('ingredientsModal');
     if (modal && e.target === modal) {
         closeIngredientsModal();
     }
 });
 
-// ================================
 // LOAD CATEGORIES
-// ================================
 function loadCategories() {
     db.from('categories')
         .select('*')
@@ -545,14 +522,14 @@ function loadCategories() {
 }
 
 function renderCategories() {
-    var container = document.getElementById('categories');
+    const container = document.getElementById('categories');
 
-    var html = '<button class="category-btn active" data-category="all" onclick="filterCategory(\'all\', this)">' +
+    const html = '<button class="category-btn active" data-category="all" onclick="filterCategory(\'all\', this)">' +
         t('allCategories') + '</button>';
 
     categories.forEach(function (cat) {
         // Get localized category name
-        var catName = getLocalizedText(cat.name);
+        const catName = getLocalizedText(cat.name);
 
         // If name is still an object or JSON, try to extract
         if (typeof catName === 'object') {
@@ -578,9 +555,7 @@ function filterCategory(categoryId, btn) {
     renderMenuItems();
 }
 
-// ================================
 // LOAD MENU ITEMS
-// ================================
 function loadMenuItems() {
     db.from('menu_items')
         .select('*')
@@ -597,10 +572,10 @@ function loadMenuItems() {
 }
 
 function renderMenuItems() {
-    var container = document.getElementById('menuGrid');
+    const container = document.getElementById('menuGrid');
 
     // Filter items
-    var filtered = menuItems;
+    const filtered = menuItems;
 
     // By category
     if (currentCategory !== 'all') {
@@ -624,14 +599,14 @@ function renderMenuItems() {
         return;
     }
 
-    var ingredientsLabel = currentLang === 'am' ? 'ንጥረ ነገሮች' : 'Ingredients';
+    const ingredientsLabel = currentLang === 'am' ? 'ንጥረ ነገሮች' : 'Ingredients';
 
-    var html = '';
+    const html = '';
     filtered.forEach(function (item) {
-        var imageUrl = getImageUrl(item.image_url);
-        var itemName = getLocalizedText(item.name);
-        var itemPrice = parseFloat(item.price).toFixed(0) + ' Birr';
-        var hasIngredients = item.ingredients && item.ingredients !== '';
+        const imageUrl = getImageUrl(item.image_url);
+        const itemName = getLocalizedText(item.name);
+        const itemPrice = parseFloat(item.price).toFixed(0) + ' Birr';
+        const hasIngredients = item.ingredients && item.ingredients !== '';
 
         html += '<div class="menu-item" onclick="showIngredients(\'' + item.id + '\', event)">' +
             '<div class="menu-item-image">' +
@@ -653,16 +628,15 @@ function renderMenuItems() {
     container.innerHTML = html;
 }
 
-// ================================
+
 // CART MANAGEMENT
-// ================================
 function addToCart(itemId) {
     // Now redirects to show ingredients modal
     showIngredients(itemId, null);
 }
 
 function updateQuantity(itemId, cartIndex, change) {
-    var item = cart[cartIndex];
+    const item = cart[cartIndex];
     if (!item) return;
 
     item.quantity += change;
@@ -680,13 +654,13 @@ function removeFromCart(cartIndex) {
 }
 
 function renderCart() {
-    var container = document.getElementById('cartItems');
-    var countEl = document.getElementById('cartCount');
-    var totalEl = document.getElementById('cartTotal');
-    var submitBtn = document.getElementById('submitOrder');
+    const container = document.getElementById('cartItems');
+    const countEl = document.getElementById('cartCount');
+    const totalEl = document.getElementById('cartTotal');
+    const submitBtn = document.getElementById('submitOrder');
 
     // Update count
-    var totalItems = cart.reduce(function (sum, item) {
+    const totalItems = cart.reduce(function (sum, item) {
         return sum + item.quantity;
     }, 0);
     countEl.textContent = totalItems;
@@ -700,11 +674,11 @@ function renderCart() {
     }
 
     // Render items
-    var html = '';
+    const html = '';
     cart.forEach(function (item, index) {
-        var itemName = getLocalizedText(item.name);
-        var itemPrice = parseFloat(item.price).toFixed(0) + ' Birr';
-        var hasExclusions = item.excludedIngredients && item.excludedIngredients.length > 0;
+        const itemName = getLocalizedText(item.name);
+        const itemPrice = parseFloat(item.price).toFixed(0) + ' Birr';
+        const hasExclusions = item.excludedIngredients && item.excludedIngredients.length > 0;
 
         html += '<div class="cart-item">' +
             '<div class="cart-item-info">' +
@@ -731,7 +705,7 @@ function renderCart() {
     container.innerHTML = html;
 
     // Update total
-    var total = cart.reduce(function (sum, item) {
+    const total = cart.reduce(function (sum, item) {
         return sum + (item.price * item.quantity);
     }, 0);
     totalEl.textContent = parseFloat(total).toFixed(0) + ' Birr';
@@ -740,12 +714,10 @@ function renderCart() {
     submitBtn.disabled = false;
 }
 
-// ================================
 // SUBMIT ORDER
-// ================================
 function submitOrder() {
-    var tableNumber = document.getElementById('tableNumber').value;
-    var waiterName = document.getElementById('waiterName').value.trim();
+    const tableNumber = document.getElementById('tableNumber').value;
+    const waiterName = document.getElementById('waiterName').value.trim();
 
     // Validation
     if (!tableNumber) {
@@ -764,12 +736,12 @@ function submitOrder() {
     }
 
     // Disable button
-    var submitBtn = document.getElementById('submitOrder');
+    const submitBtn = document.getElementById('submitOrder');
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span>' + (currentLang === 'am' ? 'በመላክ ላይ...' : 'Sending...') + '</span>';
 
     // Calculate total
-    var total = cart.reduce(function (sum, item) {
+    const total = cart.reduce(function (sum, item) {
         return sum + (item.price * item.quantity);
     }, 0);
 
@@ -791,11 +763,11 @@ function submitOrder() {
                 return;
             }
 
-            var order = response.data;
+            const order = response.data;
 
             // Create order items with excluded ingredients as special instructions
-            var orderItems = cart.map(function (item) {
-                var specialInstructions = '';
+            const orderItems = cart.map(function (item) {
+                let specialInstructions = '';
                 if (item.excludedIngredients && item.excludedIngredients.length > 0) {
                     specialInstructions = 'WITHOUT: ' + item.excludedIngredients.join(', ');
                 }
@@ -836,7 +808,7 @@ function submitOrder() {
 }
 
 function resetSubmitButton() {
-    var submitBtn = document.getElementById('submitOrder');
+    const submitBtn = document.getElementById('submitOrder');
     submitBtn.disabled = false;
     submitBtn.innerHTML = '<span>' + t('sendToKitchen') + '</span><span class="btn-icon">🚀</span>';
 }

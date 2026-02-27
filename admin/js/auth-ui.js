@@ -1,17 +1,17 @@
 // admin/js/auth-ui.js — Password toggle (FIXED - no flicker)
 document.addEventListener('DOMContentLoaded', function () {
     // Toggle show/hide for password inputs
-    var toggleButtons = document.querySelectorAll('.pw-toggle');
+    const toggleButtons = document.querySelectorAll('.pw-toggle');
 
     toggleButtons.forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
-            var wrapper = btn.closest('.input-with-action');
+            const wrapper = btn.closest('.input-with-action');
             if (!wrapper) return;
 
-            var input = wrapper.querySelector('input');
+            const input = wrapper.querySelector('input');
             if (!input) return;
 
             if (input.type === 'password') {

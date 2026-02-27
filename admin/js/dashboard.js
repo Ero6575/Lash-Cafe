@@ -1,9 +1,9 @@
 // dashboard.js — FIXED VERSION (no flickering)
 (async function () {
-    var redirecting = false;
+    const redirecting = false;
 
     // Wait for Supabase to load
-    var attempts = 0;
+    const attempts = 0;
     while (!window.supabase && attempts < 30) {
         await new Promise(function (r) { setTimeout(r, 100); });
         attempts++;
@@ -16,14 +16,14 @@
     }
 
     // Create Supabase client
-    var supabase = window.SUPABASE_CLIENT;
+    const supabase = window.SUPABASE_CLIENT;
     if (!supabase) {
         supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
         window.SUPABASE_CLIENT = supabase;
     }
 
     // Check session
-    var session = null;
+    const session = null;
     try {
         var result = await supabase.auth.getSession();
         session = result.data && result.data.session;
@@ -38,8 +38,8 @@
 
     // Check owner exists
     try {
-        var userId = session.user.id;
-        var ownerCheck = await supabase.from('owners').select('*').eq('user_id', userId).single();
+        const userId = session.user.id;
+        const ownerCheck = await supabase.from('owners').select('*').eq('user_id', userId).single();
 
         if (ownerCheck.error || !ownerCheck.data) {
             // Create owner if not exists
@@ -52,53 +52,49 @@
         console.log('Owner check:', e.message);
     }
 
-    // ═══════════════════════════════════════════════════════
     // DOM ELEMENTS
-    // ═══════════════════════════════════════════════════════
-    var signoutBtn = document.getElementById('signout');
-    var signoutTop = document.getElementById('signout-top');
-    var pageTitle = document.getElementById('page-title');
-    var navItems = document.getElementById('nav-items');
-    var navCats = document.getElementById('nav-categories');
-    var loadingEl = document.getElementById('loading');
-    var newItemBtn = document.getElementById('new-item');
-    var globalSearch = document.getElementById('global-search');
+    const signoutBtn = document.getElementById('signout');
+    const signoutTop = document.getElementById('signout-top');
+    const pageTitle = document.getElementById('page-title');
+    const navItems = document.getElementById('nav-items');
+    const navCats = document.getElementById('nav-categories');
+    const loadingEl = document.getElementById('loading');
+    const newItemBtn = document.getElementById('new-item');
+    const globalSearch = document.getElementById('global-search');
 
-    var categoryCardsView = document.getElementById('category-cards-view');
-    var categoryCardsGrid = document.getElementById('category-cards-grid');
-    var categoryItemsView = document.getElementById('category-items-view');
-    var itemsListEl = document.getElementById('items-list');
-    var itemsViewTitle = document.getElementById('items-view-title');
-    var categoriesViewEl = document.getElementById('categories-view');
-    var categoriesList = document.getElementById('categories-list');
-    var addCategoryBtn = document.getElementById('add-category');
-    var newCategoryInput = document.getElementById('new-category-name');
-    var backToCategoriesBtn = document.getElementById('back-to-categories');
+    const categoryCardsView = document.getElementById('category-cards-view');
+    const categoryCardsGrid = document.getElementById('category-cards-grid');
+    const categoryItemsView = document.getElementById('category-items-view');
+    const itemsListEl = document.getElementById('items-list');
+    const itemsViewTitle = document.getElementById('items-view-title');
+    const categoriesViewEl = document.getElementById('categories-view');
+    const categoriesList = document.getElementById('categories-list');
+    const addCategoryBtn = document.getElementById('add-category');
+    const newCategoryInput = document.getElementById('new-category-name');
+    const backToCategoriesBtn = document.getElementById('back-to-categories');
 
-    var itemForm = document.getElementById('item-form');
-    var itemModalTitle = document.getElementById('item-modal-title');
-    var itemNameEn = document.getElementById('item-name-en');
-    var itemNameAm = document.getElementById('item-name-am');
-    var itemNameOm = document.getElementById('item-name-om');
-    var itemIngredientsEn = document.getElementById('item-ingredients-en');
-    var itemIngredientsAm = document.getElementById('item-ingredients-am');
-    var itemIngredientsOm = document.getElementById('item-ingredients-om');
-    var itemPrice = document.getElementById('item-price');
-    var itemCategory = document.getElementById('item-category');
-    var itemImageFile = document.getElementById('item-image-file');
-    var itemImageUrl = document.getElementById('item-image-url');
-    var itemImagePreviewWrap = document.getElementById('item-image-preview-wrap');
-    var itemImagePreview = document.getElementById('item-image-preview');
-    var itemCancel = document.getElementById('item-cancel');
-    var itemSave = document.getElementById('item-save');
+    const itemForm = document.getElementById('item-form');
+    const itemModalTitle = document.getElementById('item-modal-title');
+    const itemNameEn = document.getElementById('item-name-en');
+    const itemNameAm = document.getElementById('item-name-am');
+    const itemNameOm = document.getElementById('item-name-om');
+    const itemIngredientsEn = document.getElementById('item-ingredients-en');
+    const itemIngredientsAm = document.getElementById('item-ingredients-am');
+    const itemIngredientsOm = document.getElementById('item-ingredients-om');
+    const itemPrice = document.getElementById('item-price');
+    const itemCategory = document.getElementById('item-category');
+    const itemImageFile = document.getElementById('item-image-file');
+    const itemImageUrl = document.getElementById('item-image-url');
+    const itemImagePreviewWrap = document.getElementById('item-image-preview-wrap');
+    const itemImagePreview = document.getElementById('item-image-preview');
+    const itemCancel = document.getElementById('item-cancel');
+    const itemSave = document.getElementById('item-save');
 
-    var confirmYes = document.getElementById('confirm-yes');
-    var confirmNo = document.getElementById('confirm-no');
-    var confirmText = document.getElementById('confirm-text');
+    const confirmYes = document.getElementById('confirm-yes');
+    const confirmNo = document.getElementById('confirm-no');
+    const confirmText = document.getElementById('confirm-text');
 
-    // ═══════════════════════════════════════════════════════
     // SIGN OUT
-    // ═══════════════════════════════════════════════════════
     async function handleSignOut() {
         if (redirecting) return;
         redirecting = true;
@@ -111,20 +107,17 @@
     if (signoutBtn) signoutBtn.addEventListener('click', handleSignOut);
     if (signoutTop) signoutTop.addEventListener('click', handleSignOut);
 
-    // ═══════════════════════════════════════════════════════
-    // STATE
-    // ═══════════════════════════════════════════════════════
-    var categoriesCache = [];
-    var itemsCache = [];
-    var editingId = null;
-    var editingImageUrl = null;
-    var toDelete = null;
-    var currentView = 'category-cards';
-    var selectedCategoryId = null;
 
-    // ═══════════════════════════════════════════════════════
+    // STATE
+    const categoriesCache = [];
+    const itemsCache = [];
+    const editingId = null;
+    const editingImageUrl = null;
+    const toDelete = null;
+    const currentView = 'category-cards';
+    const selectedCategoryId = null;
+
     // HELPER FUNCTIONS
-    // ═══════════════════════════════════════════════════════
     function escapeHtml(s) {
         return String(s || '').replace(/[&<>"']/g, function (c) {
             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] || c;
@@ -169,12 +162,10 @@
         return extractLang(cat.name, 'en');
     }
 
-    // ═══════════════════════════════════════════════════════
     // DATA LOADING
-    // ═══════════════════════════════════════════════════════
     async function loadCategories() {
         try {
-            var result = await supabase.from('categories').select('*').order('id', { ascending: true });
+            const result = await supabase.from('categories').select('*').order('id', { ascending: true });
             if (result.error) {
                 window.showToast && window.showToast('Failed to load categories');
                 return;
@@ -195,7 +186,7 @@
 
     async function loadItems() {
         try {
-            var result = await supabase.from('menu_items').select('*').order('id', { ascending: true });
+            const result = await supabase.from('menu_items').select('*').order('id', { ascending: true });
             if (result.error) {
                 window.showToast && window.showToast('Failed to load items');
                 return;
@@ -206,9 +197,7 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════════
     // RENDERING
-    // ═══════════════════════════════════════════════════════
     function renderCurrentView() {
         if (loadingEl) loadingEl.style.display = 'none';
 
@@ -238,12 +227,12 @@
         categoryCardsGrid.innerHTML = '';
 
         categoriesCache.forEach(function (cat) {
-            var count = itemsCache.filter(function (i) {
+            const count = itemsCache.filter(function (i) {
                 return String(i.category_id) === String(cat.id);
             }).length;
-            var name = getCategoryDisplayName(cat);
+            const name = getCategoryDisplayName(cat);
 
-            var div = document.createElement('div');
+            const div = document.createElement('div');
             div.className = 'category-card';
             div.innerHTML = '<h3>' + escapeHtml(name) + '</h3><div class="item-count">' + count + ' items</div>';
             div.onclick = function () {
@@ -259,11 +248,11 @@
         if (!itemsListEl) return;
         itemsListEl.innerHTML = '';
 
-        var list = Array.isArray(filtered) ? filtered : itemsCache.filter(function (i) {
+        const list = Array.isArray(filtered) ? filtered : itemsCache.filter(function (i) {
             return String(i.category_id) === String(selectedCategoryId);
         });
 
-        var cat = categoriesCache.find(function (c) {
+        const cat = categoriesCache.find(function (c) {
             return String(c.id) === String(selectedCategoryId);
         });
 
@@ -277,14 +266,14 @@
         }
 
         list.forEach(function (item) {
-            var el = document.createElement('article');
+            const el = document.createElement('article');
             el.className = 'card-item';
-            var name = extractLang(item.name, 'en');
-            var imgSrc = item.image_url || '';
+            const name = extractLang(item.name, 'en');
+            const imgSrc = item.image_url || '';
             if (imgSrc && !/^(https?:|data:|\/)/i.test(imgSrc)) {
                 imgSrc = '../' + imgSrc;
             }
-            var imgHtml = imgSrc ? '<img src="' + escapeHtml(imgSrc) + '" alt="' + escapeHtml(name) + '" onerror="this.style.display=\'none\'">' : '';
+            const imgHtml = imgSrc ? '<img src="' + escapeHtml(imgSrc) + '" alt="' + escapeHtml(name) + '" onerror="this.style.display=\'none\'">' : '';
 
             el.innerHTML = imgHtml + '<div class="card-body"><h4>' + escapeHtml(name) + '</h4>' +
                 '<div class="meta"><span class="price">' + (item.price || 0) + ' Birr</span></div>' +
@@ -297,16 +286,14 @@
     function renderCategoriesManage() {
         if (!categoriesList) return;
         categoriesList.innerHTML = categoriesCache.map(function (c) {
-            var name = getCategoryDisplayName(c);
+            const name = getCategoryDisplayName(c);
             return '<li data-id="' + c.id + '"><div>' + escapeHtml(name) + '</div><div>' +
                 '<button class="cat-edit btn" data-id="' + c.id + '">Edit</button>' +
                 '<button class="cat-del btn" data-id="' + c.id + '">Delete</button></div></li>';
         }).join('');
     }
 
-    // ═══════════════════════════════════════════════════════
     // NAVIGATION
-    // ═══════════════════════════════════════════════════════
     if (navItems) {
         navItems.addEventListener('click', function () {
             currentView = 'category-cards';
@@ -330,9 +317,7 @@
         });
     }
 
-    // ═══════════════════════════════════════════════════════
     // NEW ITEM MODAL
-    // ═══════════════════════════════════════════════════════
     if (newItemBtn) {
         newItemBtn.addEventListener('click', function () {
             editingId = null;
@@ -345,22 +330,20 @@
         });
     }
 
-    // ═══════════════════════════════════════════════════════
     // EVENT DELEGATION (Edit, Delete buttons)
-    // ═══════════════════════════════════════════════════════
     document.addEventListener('click', function (e) {
-        var btn = e.target.closest('button');
+        const btn = e.target.closest('button');
         if (!btn || !btn.dataset.id) return;
-        var id = btn.dataset.id;
+        const id = btn.dataset.id;
 
         // Category Edit
         if (btn.classList.contains('cat-edit')) {
-            var cat = categoriesCache.find(function (c) { return String(c.id) === String(id); });
+            const cat = categoriesCache.find(function (c) { return String(c.id) === String(id); });
             if (!cat) return;
-            var currentName = getCategoryDisplayName(cat);
-            var newName = prompt('Rename category:', currentName);
+            const currentName = getCategoryDisplayName(cat);
+            const newName = prompt('Rename category:', currentName);
             if (newName && newName.trim() && newName.trim() !== currentName) {
-                var nameObj = safeParse(cat.name);
+                const nameObj = safeParse(cat.name);
                 nameObj.en = newName.trim();
                 supabase.from('categories').update({ name: JSON.stringify(nameObj) }).eq('id', cat.id)
                     .then(function (res) {
@@ -385,7 +368,7 @@
 
         // Item Edit
         if (btn.classList.contains('btn-edit')) {
-            var item = itemsCache.find(function (x) { return String(x.id) === String(id); });
+            const item = itemsCache.find(function (x) { return String(x.id) === String(id); });
             if (!item) return;
 
             editingId = item.id;
@@ -429,9 +412,7 @@
         }
     });
 
-    // ═══════════════════════════════════════════════════════
     // ITEM CANCEL
-    // ═══════════════════════════════════════════════════════
     if (itemCancel) {
         itemCancel.addEventListener('click', function () {
             editingId = null;
@@ -440,29 +421,27 @@
         });
     }
 
-    // ═══════════════════════════════════════════════════════
     // SAVE ITEM
-    // ═══════════════════════════════════════════════════════
     if (itemForm) {
         itemForm.addEventListener('submit', async function (e) {
             e.preventDefault();
-            var isEditing = itemForm.dataset.mode === 'edit' && editingId;
+            const isEditing = itemForm.dataset.mode === 'edit' && editingId;
             if (itemSave) {
                 itemSave.disabled = true;
                 itemSave.textContent = 'Saving...';
             }
 
             try {
-                var price = parseFloat(itemPrice ? itemPrice.value : 0) || 0;
-                var categoryId = itemCategory ? itemCategory.value : '';
+                const price = parseFloat(itemPrice ? itemPrice.value : 0) || 0;
+                const categoryId = itemCategory ? itemCategory.value : '';
 
                 if (!categoryId) throw new Error('Please select a category');
 
-                var payload = { price: price, category_id: categoryId };
+                const payload = { price: price, category_id: categoryId };
 
-                var nameEn = itemNameEn ? itemNameEn.value.trim() : '';
-                var nameAm = itemNameAm ? itemNameAm.value.trim() : '';
-                var nameOm = itemNameOm ? itemNameOm.value.trim() : '';
+                const nameEn = itemNameEn ? itemNameEn.value.trim() : '';
+                const nameAm = itemNameAm ? itemNameAm.value.trim() : '';
+                const nameOm = itemNameOm ? itemNameOm.value.trim() : '';
 
                 if (!nameEn && !isEditing) throw new Error('Name (English) is required');
 
@@ -474,19 +453,19 @@
                     });
                 }
 
-                var ingEn = itemIngredientsEn ? itemIngredientsEn.value.trim() : '';
-                var ingAm = itemIngredientsAm ? itemIngredientsAm.value.trim() : '';
-                var ingOm = itemIngredientsOm ? itemIngredientsOm.value.trim() : '';
+                const ingEn = itemIngredientsEn ? itemIngredientsEn.value.trim() : '';
+                const ingAm = itemIngredientsAm ? itemIngredientsAm.value.trim() : '';
+                const ingOm = itemIngredientsOm ? itemIngredientsOm.value.trim() : '';
                 if (ingEn || ingAm || ingOm) {
                     payload.ingredients = JSON.stringify({ en: ingEn, am: ingAm, om: ingOm });
                 }
 
-                var file = itemImageFile && itemImageFile.files && itemImageFile.files[0];
-                var manualUrl = itemImageUrl ? itemImageUrl.value.trim() : '';
+                const file = itemImageFile && itemImageFile.files && itemImageFile.files[0];
+                const manualUrl = itemImageUrl ? itemImageUrl.value.trim() : '';
 
                 if (file) {
-                    var path = 'menu-images/' + Date.now() + '-' + file.name.replace(/[^a-z0-9.-]/ig, '_');
-                    var uploadRes = await supabase.storage.from('menu-images').upload(path, file);
+                    const path = 'menu-images/' + Date.now() + '-' + file.name.replace(/[^a-z0-9.-]/ig, '_');
+                    const uploadRes = await supabase.storage.from('menu-images').upload(path, file);
                     if (uploadRes.error) throw uploadRes.error;
                     payload.image_url = supabase.storage.from('menu-images').getPublicUrl(path).data.publicUrl;
                 } else if (manualUrl) {
@@ -494,12 +473,12 @@
                 }
 
                 if (isEditing) {
-                    var updateRes = await supabase.from('menu_items').update(payload).eq('id', editingId);
+                    const updateRes = await supabase.from('menu_items').update(payload).eq('id', editingId);
                     if (updateRes.error) throw updateRes.error;
                     window.showToast && window.showToast('Updated!');
                 } else {
                     if (!payload.name) throw new Error('Name is required');
-                    var insertRes = await supabase.from('menu_items').insert([payload]);
+                    const insertRes = await supabase.from('menu_items').insert([payload]);
                     if (insertRes.error) throw insertRes.error;
                     window.showToast && window.showToast('Added!');
                 }
@@ -523,9 +502,7 @@
         });
     }
 
-    // ═══════════════════════════════════════════════════════
     // DELETE CONFIRM
-    // ═══════════════════════════════════════════════════════
     if (confirmYes) {
         confirmYes.addEventListener('click', async function () {
             if (!toDelete) return;
@@ -559,16 +536,14 @@
         });
     }
 
-    // ═══════════════════════════════════════════════════════
     // ADD CATEGORY
-    // ═══════════════════════════════════════════════════════
     if (addCategoryBtn) {
         addCategoryBtn.addEventListener('click', async function () {
-            var name = newCategoryInput ? newCategoryInput.value.trim() : '';
+            const name = newCategoryInput ? newCategoryInput.value.trim() : '';
             if (!name) return;
 
-            var nameJson = JSON.stringify({ en: name, am: name });
-            var result = await supabase.from('categories').insert([{ name: nameJson }]);
+            const nameJson = JSON.stringify({ en: name, am: name });
+            const result = await supabase.from('categories').insert([{ name: nameJson }]);
             if (result.error) {
                 window.showToast && window.showToast('Failed to add category');
                 return;
@@ -579,9 +554,7 @@
         });
     }
 
-    // ═══════════════════════════════════════════════════════
     // SEARCH
-    // ═══════════════════════════════════════════════════════
     if (globalSearch) {
         globalSearch.addEventListener('input', function (e) {
             var q = e.target.value.toLowerCase().trim();
@@ -601,9 +574,7 @@
         });
     }
 
-    // ═══════════════════════════════════════════════════════
     // INIT
-    // ═══════════════════════════════════════════════════════
     await loadCategories();
     await loadItems();
     renderCurrentView();
